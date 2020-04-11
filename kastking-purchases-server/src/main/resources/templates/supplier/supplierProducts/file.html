@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('供应商产品附件详情')"/>
+    <!--文件上传bootstrap-fileinput css样式-->
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!--供应商产品ID-->
+    <div id="productId" style="display: none" class="form-control-static"
+         th:text="${misSupplierProduct.productId}"></div>
+
+    <!--文件上传DIV-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <label class="font-noraml">附件上传</label>
+                        <div class="file-loading">
+                            <input id="fileinput-demo-1" type="file" multiple>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+
+<!--文件上传bootstrap-fileinput JS文件-->
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+<script th:inline="javascript">
+    var prefix = ctx + "supplier/supplierFile";
+    var datas = [[${@dict.getType('sys_normal_disable')}]];
+    var removeFlag = [[${@permission.hasPermi('supplier:historicalPrice:remove')}]];
+    $(function () {
+        <!--根据供应商产品ID加载凭证列表-->
+        $.ajax({
+            //查询URL
+            url: prefix + "/list?fatherId=" + $("#productId").text() + "&type=供应商产品",
+            type: 'post',
+            dataType: "json",
+            success: function (result) {
+                //文件路径数组
+                var initPrevConfig = new Array();
+
+                //文件配置数组
+                var initPrevConfigs = new Array();
+                for (var i = 0; i < result.rows.length; i++) {
+                    //创建文件配置并赋值
+                    //caption=文件名/标题
+                    //type=文件类型
+                    //size=文件大小
+                    //url=删除路径
+                    //downloadUrl=文件下载路径
+                    //key=文件标识
+
+                    var cfg = {
+                        caption: result.rows[i].caption,
+                        type: result.rows[i].types,
+                        size: result.rows[i].size,
+                        url: prefix + '/del/' + result.rows[i].certificateId,
+                        downloadUrl: result.rows[i].annex,
+                        key: result.rows[i].certificateId
+                    };
+
+                    //文件配置数组ADD
+                    initPrevConfigs[i] = cfg;
+
+                    //文件路径数组ADD
+                    initPrevConfig[i] = result.rows[i].annex;
+                }
+
+                //上传控件
+                $("#fileinput-demo-1").fileinput({
+                    'theme': 'explorer-fas',
+                    uploadUrl: prefix + "/adds?fatherId=" + $("#productId").text() + "&type=供应商产品",//上传路径
+                    overwriteInitial: false,
+                    initialPreviewAsData: true,
+                    uploadAsync: true,//是否异步上传
+                    showCaption: true,//是否显示标题
+                    showUpload: true,//是否显示上传按钮
+                    showRemove: true,//是否显示删除按钮
+                    showCaption: true,//是否显示输入框
+                    showPreview: true,//是否显示预览框
+                    showCancel: true,//是否显示取消按钮
+                    dropZoneEnabled: false,//是否显示拖拽区域
+                    maxFileCount: 10,//表示允许同时上传的最大文件个数
+                    initialPreviewShowDelete: true,//初始化文件是否显示删除按钮
+                    allowedPreviewTypes: ['image', 'pdf'],//允许预览类型
+                    allowedFileExtensions: null,//允许接收的文件后缀
+                    msgFilesTooMany: "选择上传的文件数量 超过允许的最大数值！",
+                    enctype: 'multipart/form-data',// 上传图片的设置  
+                    initialPreview: initPrevConfig,//初始化文件路径
+                    previewFileIconSettings: { // configure your icon file extensions
+                        'doc': '<i class="glyphicon glyphicon-file"></i>',
+                        'xls': '<i class="glyphicon glyphicon-file"></i>',
+                        'ppt': '<i class="glyphicon glyphicon-file"></i>',
+                        'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+                        'zip': '<i class="glyphicon glyphicon-file"></i>',
+                        'htm': '<i class="glyphicon glyphicon-file"></i>',
+                        'text': '<i class="glyphicon glyphicon-file"></i>',
+                        'mov': '<i class="fas fa-file-video text-warning"></i>',
+                        'mp3': '<i class="fas fa-file-audio text-warning"></i>',
+                        'object': '<i class="fas fa-file-audio text-warning"></i>',
+                        // note for these file types below no extension determination logic
+                        // has been configured (the keys itself will be used as extensions)
+                        'jpg': '<i class="fas fa-file-image text-danger"></i>',
+                        'gif': '<i class="fas fa-file-image text-muted"></i>',
+                        'png': '<i class="fas fa-file-image text-primary"></i>'
+                    },
+                    previewFileExtSettings: { // configure the logic for determining icon file extensions
+                        'doc': function (ext) {
+                            return ext.match(/(doc|docx)$/i);
+                        },
+                        'xls': function (ext) {
+                            return ext.match(/(xls|xlsx)$/i);
+                        },
+                        'ppt': function (ext) {
+                            return ext.match(/(ppt|pptx)$/i);
+                        },
+                        'zip': function (ext) {
+                            return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
+                        },
+                        'htm': function (ext) {
+                            return ext.match(/(htm|html)$/i);
+                        },
+                        'txt': function (ext) {
+                            return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
+                        },
+                        'mov': function (ext) {
+                            return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
+                        },
+                        'mp3': function (ext) {
+                            return ext.match(/(mp3|wav)$/i);
+                        }
+                    },
+                    initialPreviewConfig: initPrevConfigs
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

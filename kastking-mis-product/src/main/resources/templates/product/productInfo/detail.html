@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('产品信息详情')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-productInfo-edit">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Product ID：</label>
+            <div class="form-control-static" th:text="${productInfo.productId}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Seriesname ID：</label>
+            <div class="form-control-static" th:text="${productInfo.seriesnameId}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">SKU：</label>
+            <div class="form-control-static" th:text="${productInfo.sku}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Number：</label>
+            <div class="form-control-static" th:text="${productInfo.number}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Memo：</label>
+            <div class="form-control-static" th:text="${productInfo.memo}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">State：</label>
+            <div class="form-control-static" th:text="${productInfo.state}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Adjust：</label>
+            <div class="form-control-static" th:text="${productInfo.adjust}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Designer：</label>
+            <div class="form-control-static" th:text="${productInfo.designer}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Changes：</label>
+            <div class="form-control-static" th:text="${productInfo.changes}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">NameRule：</label>
+            <div class="form-control-static" th:text="${productInfo.nameRule}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Country：</label>
+            <div class="form-control-static" th:text="${productInfo.country}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">IsAdjust：</label>
+            <div class="form-control-static" th:text="${productInfo.isAdjust}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">DiameterMM：</label>
+            <div class="form-control-static" th:text="${productInfo.diameterMm}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">DiameterInch：</label>
+            <div class="form-control-static" th:text="${productInfo.diameterInch}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ReelSize：</label>
+            <div class="form-control-static" th:text="${productInfo.reelSize}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ReelWeight：</label>
+            <div class="form-control-static" th:text="${productInfo.reelWeight}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">MaxDrag：</label>
+            <div class="form-control-static" th:text="${productInfo.maxDrag}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">GearRatio：</label>
+            <div class="form-control-static" th:text="${productInfo.gearRatio}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">BallBearing：</label>
+            <div class="form-control-static" th:text="${productInfo.ballBearing}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">IPT：</label>
+            <div class="form-control-static" th:text="${productInfo.ipt}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">CPT：</label>
+            <div class="form-control-static" th:text="${productInfo.cpt}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineCapacityLB：</label>
+            <div class="form-control-static" th:text="${productInfo.lineCapacityLb}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineCapacityMM：</label>
+            <div class="form-control-static" th:text="${productInfo.lineCapacityMm}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">RodType：</label>
+            <div class="form-control-static" th:text="${productInfo.rodType}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">RodWeight：</label>
+            <div class="form-control-static" th:text="${productInfo.rodWeight}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">RodLength：</label>
+            <div class="form-control-static" th:text="${productInfo.rodLength}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Action：</label>
+            <div class="form-control-static" th:text="${productInfo.action}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Power：</label>
+            <div class="form-control-static" th:text="${productInfo.power}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineWt：</label>
+            <div class="form-control-static" th:text="${productInfo.lineWt}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LureWt：</label>
+            <div class="form-control-static" th:text="${productInfo.lureWt}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">NOofGuides：</label>
+            <div class="form-control-static" th:text="${productInfo.noOfGuides}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Pieces：</label>
+            <div class="form-control-static" th:text="${productInfo.pieces}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ToolLength：</label>
+            <div class="form-control-static" th:text="${productInfo.toolLength}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Material：</label>
+            <div class="form-control-static" th:text="${productInfo.material}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Color：</label>
+            <div class="form-control-static" th:text="${productInfo.color}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Style：</label>
+            <div class="form-control-static" th:text="${productInfo.style}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Type：</label>
+            <div class="form-control-static" th:text="${productInfo.type}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Size：</label>
+            <div class="form-control-static" th:text="${productInfo.size}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Notes：</label>
+            <div class="form-control-static" th:text="${productInfo.notes}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note1：</label>
+            <div class="form-control-static" th:text="${productInfo.note1}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note2：</label>
+            <div class="form-control-static" th:text="${productInfo.note2}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note3：</label>
+            <div class="form-control-static" th:text="${productInfo.note3}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note4：</label>
+            <div class="form-control-static" th:text="${productInfo.note4}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note5：</label>
+            <div class="form-control-static" th:text="${productInfo.note5}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note6：</label>
+            <div class="form-control-static" th:text="${productInfo.note6}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LenzColor：</label>
+            <div class="form-control-static" th:text="${productInfo.lenzColor}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">CoatingColor：</label>
+            <div class="form-control-static" th:text="${productInfo.coatingColor}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LenzMaterial：</label>
+            <div class="form-control-static" th:text="${productInfo.lenzMaterial}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">FrameColor：</label>
+            <div class="form-control-static" th:text="${productInfo.frameColor}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">FrameMateiral：</label>
+            <div class="form-control-static" th:text="${productInfo.frameMateiral}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Picture：</label>
+            <div class="form-control-static" th:text="${productInfo.picture}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineWeight：</label>
+            <div class="form-control-static" th:text="${productInfo.lineWeight}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineLength：</label>
+            <div class="form-control-static" th:text="${productInfo.lineLength}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">TestLB：</label>
+            <div class="form-control-static" th:text="${productInfo.testLb}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineType：</label>
+            <div class="form-control-static" th:text="${productInfo.lineType}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Strands：</label>
+            <div class="form-control-static" th:text="${productInfo.strands}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">TestStrength：</label>
+            <div class="form-control-static" th:text="${productInfo.testStrength}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">TTSKU：</label>
+            <div class="form-control-static" th:text="${productInfo.ttsku}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Tag：</label>
+            <div class="form-control-static" th:text="${productInfo.tag}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">CreateDate：</label>
+            <div class="form-control-static" th:text="${productInfo.createDate}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">UpdateDate：</label>
+            <div class="form-control-static" th:text="${productInfo.updateDate}"></div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+</body>
+</html>

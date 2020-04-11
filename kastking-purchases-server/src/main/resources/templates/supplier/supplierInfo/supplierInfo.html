@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('供应商信息列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <p>采购员/供应商：</p>
+                            <input type="text" name="buyer"/>
+                        </li>
+                        <li>
+                            <p>供应商全称：</p>
+                            <input type="text" name="fullSupplierName"/>
+                        </li>
+                        <li>
+                            <p>供应商编号：</p>
+                            <input type="text" name="supplierCode"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="addOpen()" shiro:hasPermission="supplier:supplierInfo:add">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+            <!--                <a class="btn btn-primary" onclick="$.operate.edit()" shiro:hasPermission="supplier:supplierInfo:edit">-->
+            <!--                    <i class="fa fa-edit"></i> 修改-->
+            <!--                </a>-->
+            <a class="btn btn-info" id="expandAllBtn">
+                <i class="fa fa-exchange"></i> 展开/折叠
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-tree-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var addFlag = [[${@permission.hasPermi('supplier:supplierInfo:add')}]];
+    var detailFlag = [[${@permission.hasPermi('supplier:supplierInfo:detail')}]];
+    var editFlag = [[${@permission.hasPermi('supplier:supplierInfo:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('supplier:supplierInfo:remove')}]];
+    var prefix = ctx + "supplier/supplierInfo";
+
+    $(function () {
+        var options = {
+            code: "supplierId",
+            parentCode: "fatherId",
+            expandColumn: "2",
+            uniqueId: "supplierId",
+            url: prefix + "/list",
+            detailUrl: prefix + "/detail/{id}",
+            createUrl: prefix + "/add/{id}",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove/{id}",
+            exportUrl: prefix + "/export",
+            modalName: "供应商信息",
+            columns: [{
+                field: 'selectItem',
+                radio: true
+            },
+                {
+                    field: 'buyer',
+                    title: '采购员/供应商',
+                    align: 'left'
+                },
+                {
+                    field: 'contact1',
+                    title: '联系人',
+                    align: 'left'
+                },
+                {
+                    field: 'paymentAttributes',
+                    title: '付款属性',
+                    align: 'left'
+                },
+                {
+                    field: 'fullSupplierName',
+                    title: '供应商全称',
+                    align: 'left'
+                },
+                {
+                    field: 'supplierCode',
+                    title: '供应商编号',
+                    align: 'left'
+                },
+                {
+                    field: 'paymentMethod',
+                    title: '结款方式',
+                    align: 'left'
+                },
+
+                {
+                    field: 'certificate', title: '凭证',
+                    align: 'left',
+                    formatter: function (value, row, index) {
+                        if (row.fatherId != 0) {
+                            var actions = [];
+                            actions.push('<a class="btn btn-xs btn-info  dim" href="javascript:void(0)" onclick="selectFile(\'' + row.supplierId + '\')"><i class="fa fa-paste"></i>查看</a> ');
+                            return actions.join('');
+                        }
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    align: 'left',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        if (row.fatherId != 0) {
+                            actions.push('<a class="btn btn-warning btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.supplierId + '\')"><i class="fa fa-remove"></i>详情</a> ');
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.supplierId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.supplierId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        } else {
+                            actions.push('<a class="btn btn-info btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="$.operate.add(\'' + row.supplierId + '\')"><i class="fa fa-remove"></i>新增</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.supplierId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.treeTable.init(options);
+    });
+
+    //加载凭证列表
+    function selectFile(supplierId) {
+        $.modal.open("凭证列表", prefix + "/file/" + supplierId, "1333", "800");
+    }
+
+    //打开新增采购员页面
+    function addOpen() {
+        $.modal.open("新增采购员", prefix + "/adds/", "500", "300");
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.productInfo.mapper.ProductInfoMapper">
+
+    <resultMap type="ProductInfo" id="ProductInfoResult">
+        <result property="productId" column="product_id"/>
+        <result property="seriesnameId" column="seriesname_id"/>
+        <result property="sku" column="sku"/>
+        <result property="number" column="number"/>
+        <result property="memo" column="memo"/>
+        <result property="state" column="state"/>
+        <result property="adjust" column="adjust"/>
+        <result property="designer" column="designer"/>
+        <result property="changes" column="changes"/>
+        <result property="nameRule" column="name_rule"/>
+        <result property="country" column="country"/>
+        <result property="isAdjust" column="is_adjust"/>
+        <result property="diameterMm" column="diameter_mm"/>
+        <result property="diameterInch" column="diameter_inch"/>
+        <result property="reelSize" column="reel_size"/>
+        <result property="reelWeight" column="reel_weight"/>
+        <result property="maxDrag" column="max_drag"/>
+        <result property="gearRatio" column="gear_ratio"/>
+        <result property="ballBearing" column="ball_bearing"/>
+        <result property="ipt" column="ipt"/>
+        <result property="cpt" column="cpt"/>
+        <result property="lineCapacityLb" column="line_capacity_lb"/>
+        <result property="lineCapacityMm" column="line_capacity_mm"/>
+        <result property="rodType" column="rod_type"/>
+        <result property="rodWeight" column="rod_weight"/>
+        <result property="rodLength" column="rod_length"/>
+        <result property="action" column="action"/>
+        <result property="power" column="power"/>
+        <result property="lineWt" column="line_wt"/>
+        <result property="lureWt" column="lure_wt"/>
+        <result property="noOfGuides" column="no_of_guides"/>
+        <result property="pieces" column="pieces"/>
+        <result property="toolLength" column="tool_length"/>
+        <result property="material" column="material"/>
+        <result property="color" column="color"/>
+        <result property="style" column="style"/>
+        <result property="type" column="type"/>
+        <result property="size" column="size"/>
+        <result property="notes" column="notes"/>
+        <result property="note1" column="note1"/>
+        <result property="note2" column="note2"/>
+        <result property="note3" column="note3"/>
+        <result property="note4" column="note4"/>
+        <result property="note5" column="note5"/>
+        <result property="note6" column="note6"/>
+        <result property="lenzColor" column="lenz_color"/>
+        <result property="coatingColor" column="coating_color"/>
+        <result property="lenzMaterial" column="lenz_material"/>
+        <result property="frameColor" column="frame_color"/>
+        <result property="frameMateiral" column="frame_mateiral"/>
+        <result property="picture" column="picture"/>
+        <result property="lineWeight" column="line_weight"/>
+        <result property="lineLength" column="line_length"/>
+        <result property="testLb" column="test_lb"/>
+        <result property="lineType" column="line_type"/>
+        <result property="strands" column="strands"/>
+        <result property="testStrength" column="test_strength"/>
+        <result property="ttsku" column="ttsku"/>
+        <result property="tag" column="tag"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+    <sql id="selectProductInfoVo">
+        select product_id, seriesname_id, sku, number, memo, state, adjust, designer, changes, name_rule, country,
+        is_adjust, diameter_mm, diameter_inch, reel_size, reel_weight, max_drag, gear_ratio, ball_bearing, ipt, cpt,
+        line_capacity_lb, line_capacity_mm, rod_type, rod_weight, rod_length, action, power, line_wt, lure_wt,
+        no_of_guides, pieces, tool_length, material, color, style, type, size, notes, note1, note2, note3, note4, note5,
+        note6, lenz_color, coating_color, lenz_material, frame_color, frame_mateiral, picture, line_weight, line_length,
+        test_lb, line_type, strands, test_strength, ttsku, tag, create_date, update_date from mis_product_info
+    </sql>
+
+    <select id="selectProductInfoList" parameterType="ProductInfo" resultMap="ProductInfoResult">
+        <include refid="selectProductInfoVo"/>
+        <where>
+            <if test="seriesnameId != null ">
+                and (
+                seriesname_id = ${seriesnameId}
+                or seriesname_id in (select category_id from mis_product_category where father_id=${seriesnameId})
+                or seriesname_id in (select category_id from mis_product_category where father_id in (select category_id
+                from mis_product_category where father_id=${seriesnameId}))
+                or seriesname_id in (select category_id from mis_product_category where father_id in (select category_id
+                from mis_product_category where father_id in(select category_id from mis_product_category where
+                father_id=${seriesnameId}
+                ))))
+            </if>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+            <if test="number != null  and number != ''">and number = #{number}</if>
+            <if test="memo != null  and memo != ''">and memo = #{memo}</if>
+            <if test="state != null ">and state = #{state}</if>
+            <if test="adjust != null  and adjust != ''">and adjust = #{adjust}</if>
+            <if test="designer != null  and designer != ''">and designer = #{designer}</if>
+            <if test="changes != null  and changes != ''">and changes = #{changes}</if>
+            <if test="nameRule != null  and nameRule != ''">and name_rule = #{nameRule}</if>
+            <if test="country != null  and country != ''">and country = #{country}</if>
+            <if test="isAdjust != null ">and is_adjust = #{isAdjust}</if>
+            <if test="diameterMm != null  and diameterMm != ''">and diameter_mm = #{diameterMm}</if>
+            <if test="diameterInch != null  and diameterInch != ''">and diameter_inch = #{diameterInch}</if>
+            <if test="reelSize != null  and reelSize != ''">and reel_size = #{reelSize}</if>
+            <if test="reelWeight != null  and reelWeight != ''">and reel_weight = #{reelWeight}</if>
+            <if test="maxDrag != null  and maxDrag != ''">and max_drag = #{maxDrag}</if>
+            <if test="gearRatio != null  and gearRatio != ''">and gear_ratio = #{gearRatio}</if>
+            <if test="ballBearing != null  and ballBearing != ''">and ball_bearing = #{ballBearing}</if>
+            <if test="ipt != null  and ipt != ''">and ipt = #{ipt}</if>
+            <if test="cpt != null  and cpt != ''">and cpt = #{cpt}</if>
+            <if test="lineCapacityLb != null  and lineCapacityLb != ''">and line_capacity_lb = #{lineCapacityLb}</if>
+            <if test="lineCapacityMm != null  and lineCapacityMm != ''">and line_capacity_mm = #{lineCapacityMm}</if>
+            <if test="rodType != null  and rodType != ''">and rod_type = #{rodType}</if>
+            <if test="rodWeight != null  and rodWeight != ''">and rod_weight = #{rodWeight}</if>
+            <if test="rodLength != null  and rodLength != ''">and rod_length = #{rodLength}</if>
+            <if test="action != null  and action != ''">and action = #{action}</if>
+            <if test="power != null  and power != ''">and power = #{power}</if>
+            <if test="lineWt != null  and lineWt != ''">and line_wt = #{lineWt}</if>
+            <if test="lureWt != null  and lureWt != ''">and lure_wt = #{lureWt}</if>
+            <if test="noOfGuides != null  and noOfGuides != ''">and no_of_guides = #{noOfGuides}</if>
+            <if test="pieces != null  and pieces != ''">and pieces = #{pieces}</if>
+            <if test="toolLength != null  and toolLength != ''">and tool_length = #{toolLength}</if>
+            <if test="material != null  and material != ''">and material = #{material}</if>
+            <if test="color != null  and color != ''">and color = #{color}</if>
+            <if test="style != null  and style != ''">and style = #{style}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="size != null  and size != ''">and size = #{size}</if>
+            <if test="notes != null  and notes != ''">and notes = #{notes}</if>
+            <if test="note1 != null  and note1 != ''">and note1 = #{note1}</if>
+            <if test="note2 != null  and note2 != ''">and note2 = #{note2}</if>
+            <if test="note3 != null  and note3 != ''">and note3 = #{note3}</if>
+            <if test="note4 != null  and note4 != ''">and note4 = #{note4}</if>
+            <if test="note5 != null  and note5 != ''">and note5 = #{note5}</if>
+            <if test="note6 != null  and note6 != ''">and note6 = #{note6}</if>
+            <if test="lenzColor != null  and lenzColor != ''">and lenz_color = #{lenzColor}</if>
+            <if test="coatingColor != null  and coatingColor != ''">and coating_color = #{coatingColor}</if>
+            <if test="lenzMaterial != null  and lenzMaterial != ''">and lenz_material = #{lenzMaterial}</if>
+            <if test="frameColor != null  and frameColor != ''">and frame_color = #{frameColor}</if>
+            <if test="frameMateiral != null  and frameMateiral != ''">and frame_mateiral = #{frameMateiral}</if>
+            <if test="picture != null  and picture != ''">and picture = #{picture}</if>
+            <if test="lineWeight != null  and lineWeight != ''">and line_weight = #{lineWeight}</if>
+            <if test="lineLength != null  and lineLength != ''">and line_length = #{lineLength}</if>
+            <if test="testLb != null  and testLb != ''">and test_lb = #{testLb}</if>
+            <if test="lineType != null  and lineType != ''">and line_type = #{lineType}</if>
+            <if test="strands != null  and strands != ''">and strands = #{strands}</if>
+            <if test="testStrength != null  and testStrength != ''">and test_strength = #{testStrength}</if>
+            <if test="ttsku != null  and ttsku != ''">and ttsku = #{ttsku}</if>
+            <if test="tag != null  and tag != ''">and tag = #{tag}</if>
+        </where>
+    </select>
+
+    <select id="selectProductInfoById" parameterType="Long" resultMap="ProductInfoResult">
+        <include refid="selectProductInfoVo"/>
+        where product_id = #{productId}
+    </select>
+
+    <insert id="insertProductInfo" parameterType="ProductInfo" useGeneratedKeys="true" keyProperty="productId">
+        insert into mis_product_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="seriesnameId != null ">seriesname_id,</if>
+            <if test="sku != null  and sku != ''">sku,</if>
+            <if test="number != null  and number != ''">number,</if>
+            <if test="memo != null  and memo != ''">memo,</if>
+            <if test="state != null ">state,</if>
+            <if test="adjust != null  and adjust != ''">adjust,</if>
+            <if test="designer != null  and designer != ''">designer,</if>
+            <if test="changes != null  and changes != ''">changes,</if>
+            <if test="nameRule != null  and nameRule != ''">name_rule,</if>
+            <if test="country != null  and country != ''">country,</if>
+            <if test="isAdjust != null ">is_adjust,</if>
+            <if test="diameterMm != null  and diameterMm != ''">diameter_mm,</if>
+            <if test="diameterInch != null  and diameterInch != ''">diameter_inch,</if>
+            <if test="reelSize != null  and reelSize != ''">reel_size,</if>
+            <if test="reelWeight != null  and reelWeight != ''">reel_weight,</if>
+            <if test="maxDrag != null  and maxDrag != ''">max_drag,</if>
+            <if test="gearRatio != null  and gearRatio != ''">gear_ratio,</if>
+            <if test="ballBearing != null  and ballBearing != ''">ball_bearing,</if>
+            <if test="ipt != null  and ipt != ''">ipt,</if>
+            <if test="cpt != null  and cpt != ''">cpt,</if>
+            <if test="lineCapacityLb != null  and lineCapacityLb != ''">line_capacity_lb,</if>
+            <if test="lineCapacityMm != null  and lineCapacityMm != ''">line_capacity_mm,</if>
+            <if test="rodType != null  and rodType != ''">rod_type,</if>
+            <if test="rodWeight != null  and rodWeight != ''">rod_weight,</if>
+            <if test="rodLength != null  and rodLength != ''">rod_length,</if>
+            <if test="action != null  and action != ''">action,</if>
+            <if test="power != null  and power != ''">power,</if>
+            <if test="lineWt != null  and lineWt != ''">line_wt,</if>
+            <if test="lureWt != null  and lureWt != ''">lure_wt,</if>
+            <if test="noOfGuides != null  and noOfGuides != ''">no_of_guides,</if>
+            <if test="pieces != null  and pieces != ''">pieces,</if>
+            <if test="toolLength != null  and toolLength != ''">tool_length,</if>
+            <if test="material != null  and material != ''">material,</if>
+            <if test="color != null  and color != ''">color,</if>
+            <if test="style != null  and style != ''">style,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="size != null  and size != ''">size,</if>
+            <if test="notes != null  and notes != ''">notes,</if>
+            <if test="note1 != null  and note1 != ''">note1,</if>
+            <if test="note2 != null  and note2 != ''">note2,</if>
+            <if test="note3 != null  and note3 != ''">note3,</if>
+            <if test="note4 != null  and note4 != ''">note4,</if>
+            <if test="note5 != null  and note5 != ''">note5,</if>
+            <if test="note6 != null  and note6 != ''">note6,</if>
+            <if test="lenzColor != null  and lenzColor != ''">lenz_color,</if>
+            <if test="coatingColor != null  and coatingColor != ''">coating_color,</if>
+            <if test="lenzMaterial != null  and lenzMaterial != ''">lenz_material,</if>
+            <if test="frameColor != null  and frameColor != ''">frame_color,</if>
+            <if test="frameMateiral != null  and frameMateiral != ''">frame_mateiral,</if>
+            <if test="picture != null  and picture != ''">picture,</if>
+            <if test="lineWeight != null  and lineWeight != ''">line_weight,</if>
+            <if test="lineLength != null  and lineLength != ''">line_length,</if>
+            <if test="testLb != null  and testLb != ''">test_lb,</if>
+            <if test="lineType != null  and lineType != ''">line_type,</if>
+            <if test="strands != null  and strands != ''">strands,</if>
+            <if test="testStrength != null  and testStrength != ''">test_strength,</if>
+            <if test="ttsku != null  and ttsku != ''">ttsku,</if>
+            <if test="tag != null  and tag != ''">tag,</if>
+            <if test="createDate != null ">create_date,</if>
+            <if test="updateDate != null ">update_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="seriesnameId != null ">#{seriesnameId},</if>
+            <if test="sku != null  and sku != ''">#{sku},</if>
+            <if test="number != null  and number != ''">#{number},</if>
+            <if test="memo != null  and memo != ''">#{memo},</if>
+            <if test="state != null ">#{state},</if>
+            <if test="adjust != null  and adjust != ''">#{adjust},</if>
+            <if test="designer != null  and designer != ''">#{designer},</if>
+            <if test="changes != null  and changes != ''">#{changes},</if>
+            <if test="nameRule != null  and nameRule != ''">#{nameRule},</if>
+            <if test="country != null  and country != ''">#{country},</if>
+            <if test="isAdjust != null ">#{isAdjust},</if>
+            <if test="diameterMm != null  and diameterMm != ''">#{diameterMm},</if>
+            <if test="diameterInch != null  and diameterInch != ''">#{diameterInch},</if>
+            <if test="reelSize != null  and reelSize != ''">#{reelSize},</if>
+            <if test="reelWeight != null  and reelWeight != ''">#{reelWeight},</if>
+            <if test="maxDrag != null  and maxDrag != ''">#{maxDrag},</if>
+            <if test="gearRatio != null  and gearRatio != ''">#{gearRatio},</if>
+            <if test="ballBearing != null  and ballBearing != ''">#{ballBearing},</if>
+            <if test="ipt != null  and ipt != ''">#{ipt},</if>
+            <if test="cpt != null  and cpt != ''">#{cpt},</if>
+            <if test="lineCapacityLb != null  and lineCapacityLb != ''">#{lineCapacityLb},</if>
+            <if test="lineCapacityMm != null  and lineCapacityMm != ''">#{lineCapacityMm},</if>
+            <if test="rodType != null  and rodType != ''">#{rodType},</if>
+            <if test="rodWeight != null  and rodWeight != ''">#{rodWeight},</if>
+            <if test="rodLength != null  and rodLength != ''">#{rodLength},</if>
+            <if test="action != null  and action != ''">#{action},</if>
+            <if test="power != null  and power != ''">#{power},</if>
+            <if test="lineWt != null  and lineWt != ''">#{lineWt},</if>
+            <if test="lureWt != null  and lureWt != ''">#{lureWt},</if>
+            <if test="noOfGuides != null  and noOfGuides != ''">#{noOfGuides},</if>
+            <if test="pieces != null  and pieces != ''">#{pieces},</if>
+            <if test="toolLength != null  and toolLength != ''">#{toolLength},</if>
+            <if test="material != null  and material != ''">#{material},</if>
+            <if test="color != null  and color != ''">#{color},</if>
+            <if test="style != null  and style != ''">#{style},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="size != null  and size != ''">#{size},</if>
+            <if test="notes != null  and notes != ''">#{notes},</if>
+            <if test="note1 != null  and note1 != ''">#{note1},</if>
+            <if test="note2 != null  and note2 != ''">#{note2},</if>
+            <if test="note3 != null  and note3 != ''">#{note3},</if>
+            <if test="note4 != null  and note4 != ''">#{note4},</if>
+            <if test="note5 != null  and note5 != ''">#{note5},</if>
+            <if test="note6 != null  and note6 != ''">#{note6},</if>
+            <if test="lenzColor != null  and lenzColor != ''">#{lenzColor},</if>
+            <if test="coatingColor != null  and coatingColor != ''">#{coatingColor},</if>
+            <if test="lenzMaterial != null  and lenzMaterial != ''">#{lenzMaterial},</if>
+            <if test="frameColor != null  and frameColor != ''">#{frameColor},</if>
+            <if test="frameMateiral != null  and frameMateiral != ''">#{frameMateiral},</if>
+            <if test="picture != null  and picture != ''">#{picture},</if>
+            <if test="lineWeight != null  and lineWeight != ''">#{lineWeight},</if>
+            <if test="lineLength != null  and lineLength != ''">#{lineLength},</if>
+            <if test="testLb != null  and testLb != ''">#{testLb},</if>
+            <if test="lineType != null  and lineType != ''">#{lineType},</if>
+            <if test="strands != null  and strands != ''">#{strands},</if>
+            <if test="testStrength != null  and testStrength != ''">#{testStrength},</if>
+            <if test="ttsku != null  and ttsku != ''">#{ttsku},</if>
+            <if test="tag != null  and tag != ''">#{tag},</if>
+            <if test="createDate != null ">#{createDate},</if>
+            <if test="updateDate != null ">#{updateDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductInfo" parameterType="ProductInfo">
+        update mis_product_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="seriesnameId != null ">seriesname_id = #{seriesnameId},</if>
+            <if test="sku != null  and sku != ''">sku = #{sku},</if>
+            <if test="number != null  and number != ''">number = #{number},</if>
+            <if test="memo != null  and memo != ''">memo = #{memo},</if>
+            <if test="state != null ">state = #{state},</if>
+            <if test="adjust != null  and adjust != ''">adjust = #{adjust},</if>
+            <if test="designer != null  and designer != ''">designer = #{designer},</if>
+            <if test="changes != null  and changes != ''">changes = #{changes},</if>
+            <if test="nameRule != null  and nameRule != ''">name_rule = #{nameRule},</if>
+            <if test="country != null  and country != ''">country = #{country},</if>
+            <if test="isAdjust != null ">is_adjust = #{isAdjust},</if>
+            <if test="diameterMm != null  and diameterMm != ''">diameter_mm = #{diameterMm},</if>
+            <if test="diameterInch != null  and diameterInch != ''">diameter_inch = #{diameterInch},</if>
+            <if test="reelSize != null  and reelSize != ''">reel_size = #{reelSize},</if>
+            <if test="reelWeight != null  and reelWeight != ''">reel_weight = #{reelWeight},</if>
+            <if test="maxDrag != null  and maxDrag != ''">max_drag = #{maxDrag},</if>
+            <if test="gearRatio != null  and gearRatio != ''">gear_ratio = #{gearRatio},</if>
+            <if test="ballBearing != null  and ballBearing != ''">ball_bearing = #{ballBearing},</if>
+            <if test="ipt != null  and ipt != ''">ipt = #{ipt},</if>
+            <if test="cpt != null  and cpt != ''">cpt = #{cpt},</if>
+            <if test="lineCapacityLb != null  and lineCapacityLb != ''">line_capacity_lb = #{lineCapacityLb},</if>
+            <if test="lineCapacityMm != null  and lineCapacityMm != ''">line_capacity_mm = #{lineCapacityMm},</if>
+            <if test="rodType != null  and rodType != ''">rod_type = #{rodType},</if>
+            <if test="rodWeight != null  and rodWeight != ''">rod_weight = #{rodWeight},</if>
+            <if test="rodLength != null  and rodLength != ''">rod_length = #{rodLength},</if>
+            <if test="action != null  and action != ''">action = #{action},</if>
+            <if test="power != null  and power != ''">power = #{power},</if>
+            <if test="lineWt != null  and lineWt != ''">line_wt = #{lineWt},</if>
+            <if test="lureWt != null  and lureWt != ''">lure_wt = #{lureWt},</if>
+            <if test="noOfGuides != null  and noOfGuides != ''">no_of_guides = #{noOfGuides},</if>
+            <if test="pieces != null  and pieces != ''">pieces = #{pieces},</if>
+            <if test="toolLength != null  and toolLength != ''">tool_length = #{toolLength},</if>
+            <if test="material != null  and material != ''">material = #{material},</if>
+            <if test="color != null  and color != ''">color = #{color},</if>
+            <if test="style != null  and style != ''">style = #{style},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="size != null  and size != ''">size = #{size},</if>
+            <if test="notes != null  and notes != ''">notes = #{notes},</if>
+            <if test="note1 != null  and note1 != ''">note1 = #{note1},</if>
+            <if test="note2 != null  and note2 != ''">note2 = #{note2},</if>
+            <if test="note3 != null  and note3 != ''">note3 = #{note3},</if>
+            <if test="note4 != null  and note4 != ''">note4 = #{note4},</if>
+            <if test="note5 != null  and note5 != ''">note5 = #{note5},</if>
+            <if test="note6 != null  and note6 != ''">note6 = #{note6},</if>
+            <if test="lenzColor != null  and lenzColor != ''">lenz_color = #{lenzColor},</if>
+            <if test="coatingColor != null  and coatingColor != ''">coating_color = #{coatingColor},</if>
+            <if test="lenzMaterial != null  and lenzMaterial != ''">lenz_material = #{lenzMaterial},</if>
+            <if test="frameColor != null  and frameColor != ''">frame_color = #{frameColor},</if>
+            <if test="frameMateiral != null  and frameMateiral != ''">frame_mateiral = #{frameMateiral},</if>
+            <if test="picture != null  and picture != ''">picture = #{picture},</if>
+            <if test="lineWeight != null  and lineWeight != ''">line_weight = #{lineWeight},</if>
+            <if test="lineLength != null  and lineLength != ''">line_length = #{lineLength},</if>
+            <if test="testLb != null  and testLb != ''">test_lb = #{testLb},</if>
+            <if test="lineType != null  and lineType != ''">line_type = #{lineType},</if>
+            <if test="strands != null  and strands != ''">strands = #{strands},</if>
+            <if test="testStrength != null  and testStrength != ''">test_strength = #{testStrength},</if>
+            <if test="ttsku != null  and ttsku != ''">ttsku = #{ttsku},</if>
+            <if test="tag != null  and tag != ''">tag = #{tag},</if>
+            <if test="createDate != null ">create_date = #{createDate},</if>
+            <if test="updateDate != null ">update_date = #{updateDate},</if>
+        </trim>
+        where product_id = #{productId}
+    </update>
+
+    <delete id="deleteProductInfoById" parameterType="Long">
+        delete from mis_product_info where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteProductInfoByIds" parameterType="String">
+        delete from mis_product_info where product_id in
+        <foreach item="productId" collection="array" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </delete>
+
+</mapper>

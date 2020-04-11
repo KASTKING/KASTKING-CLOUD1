@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.salesforcastInfo.mapper.SalesforcastInfoMapper">
+
+    <resultMap type="SalesforcastInfo" id="SalesforcastInfoResult">
+        <result property="salesforcastInfoId" column="salesforcast_info_id"/>
+        <result property="period" column="period"/>
+        <result property="channel" column="channel"/>
+        <result property="salesman" column="salesman"/>
+        <result property="forecastMonth" column="forecast_month"/>
+        <result property="reviewer" column="reviewer"/>
+        <result property="band" column="band"/>
+        <result property="rootcategory" column="rootcategory"/>
+        <result property="secondcategory" column="secondcategory"/>
+        <result property="seriesname" column="seriesname"/>
+        <result property="sku" column="sku"/>
+        <result property="productLevel" column="product_level"/>
+        <result property="mom" column="mom"/>
+        <result property="lastYearSales" column="last_year_sales"/>
+        <result property="monthlySales" column="monthly_sales"/>
+        <result property="forecastMonthlySales" column="forecast_monthly_sales"/>
+        <result property="lastDemand" column="last_demand"/>
+        <result property="suggestedAmount" column="suggested_amount"/>
+        <result property="demand" column="demand"/>
+        <result property="twoDemand" column="two_demand"/>
+        <result property="outofstockDays" column="outofstock_days"/>
+        <result property="noOutofstockSales" column="no_outofstock_sales"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="sellingPrice" column="selling_price"/>
+        <result property="increment" column="increment"/>
+        <result property="totalDemand" column="total_demand"/>
+        <result property="stockingFactor" column="stocking_factor"/>
+        <result property="riskJudgment" column="risk_judgment"/>
+    </resultMap>
+
+    <update id="review">
+        update mis_salesforcast_info
+        set
+        <if test="anti == 1 ">reviewer = #{person}</if>
+        <if test="anti == 0 ">reviewer = null</if>
+        where
+        period = (select * from (select period from mis_salesforcast_info where salesforcast_info_id =
+        #{salesforcastInfoId} ) t )
+        and channel = (select * from (select channel from mis_salesforcast_info where salesforcast_info_id =
+        #{salesforcastInfoId} ) t )
+        and forecast_month = (select * from (select forecast_month from mis_salesforcast_info where salesforcast_info_id
+        = #{salesforcastInfoId} ) t )
+        and salesman = (select * from (select salesman from mis_salesforcast_info where salesforcast_info_id =
+        #{salesforcastInfoId} ) t )
+    </update>
+
+    <select id="listSalesforcastSales" resultType="SalesforcastDemanda" parameterType="SalesforcastDemanda">
+        SELECT * from (
+        SELECT period,channel,salesman,band,rootcategory,secondcategory,seriesname,sku,
+        MAX(case when forecast_month='2020-04-01' then total_demand*selling_price end) as 'r1',
+        MAX(case when forecast_month='2020-05-01' then total_demand*selling_price end) as 'r2',
+        MAX(case when forecast_month='2020-06-01' then total_demand*selling_price end) as 'r3',
+        MAX(case when forecast_month='2020-07-01' then total_demand*selling_price end) as 'r4',
+        MAX(case when forecast_month='2020-08-01' then total_demand*selling_price end) as 'r5',
+        MAX(case when forecast_month='2020-09-01' then total_demand*selling_price end) as 'r6',
+        MAX(case when forecast_month='2020-10-01' then total_demand*selling_price end) as 'r7'
+        FROM vmis_salesforcast_info
+        <where>
+            <if test="period != null ">and period = #{period}</if>
+            <if test="channel != null  and channel != ''">and channel = #{channel}</if>
+            <if test="salesman != null  and salesman != ''">and salesman = #{salesman}</if>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+            <if test="productLevel != null  and productLevel != ''">and product_level = #{productLevel}</if>
+        </where>
+        GROUP BY period,channel,salesman,band,rootcategory,secondcategory,seriesname,sku
+        UNION ALL
+        SELECT period,channel,salesman,band,rootcategory,secondcategory,seriesname,'小计' as sku,
+        SUM(case when forecast_month='2020-04-01' then total_demand*selling_price end) as 'r1',
+        SUM(case when forecast_month='2020-05-01' then total_demand*selling_price end) as 'r2',
+        SUM(case when forecast_month='2020-06-01' then total_demand*selling_price end) as 'r3',
+        SUM(case when forecast_month='2020-07-01' then total_demand*selling_price end) as 'r4',
+        SUM(case when forecast_month='2020-08-01' then total_demand*selling_price end) as 'r5',
+        SUM(case when forecast_month='2020-09-01' then total_demand*selling_price end) as 'r6',
+        SUM(case when forecast_month='2020-10-01' then total_demand*selling_price end) as 'r7'
+        FROM vmis_salesforcast_info
+
+        <where>
+            <if test="period != null ">and period = #{period}</if>
+            <if test="channel != null  and channel != ''">and channel = #{channel}</if>
+            <if test="salesman != null  and salesman != ''">and salesman = #{salesman}</if>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+            <if test="productLevel != null  and productLevel != ''">and product_level = #{productLevel}</if>
+        </where>
+        GROUP BY period,channel,salesman,band,rootcategory,secondcategory,seriesname
+        ) t ORDER BY period,channel,salesman,band,rootcategory,secondcategory,seriesname,sku
+
+    </select>
+
+    <select id="listSalesforcastDemand" resultType="SalesforcastDemanda" parameterType="SalesforcastDemanda">
+        SELECT * from (
+        SELECT period,channel,salesman,band,rootcategory,secondcategory,seriesname,sku,
+        MAX(case when forecast_month='2020-04-01' then product_level end) as 'productlevel',
+        MAX(case when forecast_month='2020-04-01' then monthly_sales end) as 'monthlysales',
+        MAX(case when forecast_month='2020-04-01' then forecast_monthly_sales end) as 'forecastmonthlysales',
+        MAX(case when forecast_month='2020-04-01' then total_demand end) as 'r1',
+        MAX(case when forecast_month='2020-05-01' then total_demand end) as 'r2',
+        MAX(case when forecast_month='2020-06-01' then total_demand end) as 'r3',
+        MAX(case when forecast_month='2020-07-01' then total_demand end) as 'r4',
+        MAX(case when forecast_month='2020-08-01' then total_demand end) as 'r5',
+        MAX(case when forecast_month='2020-09-01' then total_demand end) as 'r6',
+        MAX(case when forecast_month='2020-10-01' then total_demand end) as 'r7'
+        FROM vmis_salesforcast_info
+        <where>
+            <if test="period != null ">and period = #{period}</if>
+            <if test="channel != null  and channel != ''">and channel = #{channel}</if>
+            <if test="salesman != null  and salesman != ''">and salesman = #{salesman}</if>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+            <if test="productLevel != null  and productLevel != ''">and product_level = #{productLevel}</if>
+        </where>
+        GROUP BY period,channel,salesman,band,rootcategory,secondcategory,seriesname,sku
+        UNION ALL
+        SELECT period,channel,salesman,band,rootcategory,secondcategory,seriesname,'小计' as sku,null product_level,
+        SUM(case when forecast_month='2020-04-01' then monthly_sales end) as 'monthlysales',
+        SUM(case when forecast_month='2020-04-01' then forecast_monthly_sales end) as 'forecastmonthlysales',
+        SUM(case when forecast_month='2020-04-01' then total_demand end) as 'r1',
+        SUM(case when forecast_month='2020-05-01' then total_demand end) as 'r2',
+        SUM(case when forecast_month='2020-06-01' then total_demand end) as 'r3',
+        SUM(case when forecast_month='2020-07-01' then total_demand end) as 'r4',
+        SUM(case when forecast_month='2020-08-01' then total_demand end) as 'r5',
+        SUM(case when forecast_month='2020-09-01' then total_demand end) as 'r6',
+        SUM(case when forecast_month='2020-10-01' then total_demand end) as 'r7'
+        FROM vmis_salesforcast_info
+        <where>
+            <if test="period != null ">and period = #{period}</if>
+            <if test="channel != null  and channel != ''">and channel = #{channel}</if>
+            <if test="salesman != null  and salesman != ''">and salesman = #{salesman}</if>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+            <if test="productLevel != null  and productLevel != ''">and product_level = #{productLevel}</if>
+        </where>
+        GROUP BY period,channel,salesman,band,rootcategory,secondcategory,seriesname
+        ) t
+        ORDER BY period,channel,salesman,band,rootcategory,secondcategory,seriesname,sku
+
+    </select>
+
+    <sql id="selectSalesforcastInfoVo">
+        select salesforcast_info_id,band,rootcategory,secondcategory,seriesname, left(period,7) as period, channel,
+        salesman, left(forecast_month,7) as forecast_month, reviewer, sku, product_level, mom, last_year_sales,
+        monthly_sales, forecast_monthly_sales, last_demand, suggested_amount, demand, two_demand, outofstock_days,
+        no_outofstock_sales, create_date, update_date,selling_price,increment,total_demand,stocking_factor,risk_judgment
+        from vmis_salesforcast_info
+    </sql>
+
+    <select id="selectSalesforcastInfoList" parameterType="SalesforcastInfo" resultMap="SalesforcastInfoResult">
+        <include refid="selectSalesforcastInfoVo"/>
+        <where>
+            <if test="salesforcastInfoId != null">
+                and period = (select period from mis_salesforcast_info where salesforcast_info_id =
+                #{salesforcastInfoId} )
+                and channel = (select channel from mis_salesforcast_info where salesforcast_info_id =
+                #{salesforcastInfoId} )
+                and forecast_month = (select forecast_month from mis_salesforcast_info where salesforcast_info_id =
+                #{salesforcastInfoId} )
+                and salesman = (select salesman from mis_salesforcast_info where salesforcast_info_id =
+                #{salesforcastInfoId} )
+            </if>
+            <if test="period != null ">and period = #{period}</if>
+            <if test="channel != null  and channel != ''">and channel = #{channel}</if>
+            <if test="salesman != null  and salesman != ''">and salesman = #{salesman}</if>
+            <if test="forecastMonth != null ">and forecast_month = #{forecastMonth}</if>
+            <if test="reviewer != null  and reviewer != ''">and reviewer = #{reviewer}</if>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+            <if test="productLevel != null  and productLevel != ''">and product_level = #{productLevel}</if>
+            <if test="mom != null ">and mom = #{mom}</if>
+            <if test="lastYearSales != null ">and last_year_sales = #{lastYearSales}</if>
+            <if test="monthlySales != null ">and monthly_sales = #{monthlySales}</if>
+            <if test="forecastMonthlySales != null ">and forecast_monthly_sales = #{forecastMonthlySales}</if>
+            <if test="lastDemand != null ">and last_demand = #{lastDemand}</if>
+            <if test="suggestedAmount != null ">and suggested_amount = #{suggestedAmount}</if>
+            <if test="demand != null ">and demand = #{demand}</if>
+            <if test="twoDemand != null ">and two_demand = #{twoDemand}</if>
+            <if test="outofstockDays != null ">and outofstock_days = #{outofstockDays}</if>
+            <if test="noOutofstockSales != null ">and no_outofstock_sales = #{noOutofstockSales}</if>
+        </where>
+    </select>
+
+    <select id="selectSalesforcastInfoById" parameterType="Long" resultMap="SalesforcastInfoResult">
+        <include refid="selectSalesforcastInfoVo"/>
+        where salesforcast_info_id = #{salesforcastInfoId}
+    </select>
+
+    <insert id="insertSalesforcastInfo" parameterType="SalesforcastInfo" useGeneratedKeys="true"
+            keyProperty="salesforcastInfoId">
+        insert into mis_salesforcast_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="period != null ">period,</if>
+            <if test="channel != null  and channel != ''">channel,</if>
+            <if test="salesman != null  and salesman != ''">salesman,</if>
+            <if test="forecastMonth != null ">forecast_month,</if>
+            <if test="reviewer != null  and reviewer != ''">reviewer,</if>
+            <if test="sku != null  and sku != ''">sku,</if>
+            <if test="productLevel != null  and productLevel != ''">product_level,</if>
+            <if test="mom != null ">mom,</if>
+            <if test="lastYearSales != null ">last_year_sales,</if>
+            <if test="monthlySales != null ">monthly_sales,</if>
+            <if test="forecastMonthlySales != null ">forecast_monthly_sales,</if>
+            <if test="lastDemand != null ">last_demand,</if>
+            <if test="suggestedAmount != null ">suggested_amount,</if>
+            <if test="demand != null ">demand,</if>
+            <if test="twoDemand != null ">two_demand,</if>
+            <if test="outofstockDays != null ">outofstock_days,</if>
+            <if test="noOutofstockSales != null ">no_outofstock_sales,</if>
+            <if test="createDate != null ">create_date,</if>
+            <if test="updateDate != null ">update_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="period != null ">#{period},</if>
+            <if test="channel != null  and channel != ''">#{channel},</if>
+            <if test="salesman != null  and salesman != ''">#{salesman},</if>
+            <if test="forecastMonth != null ">#{forecastMonth},</if>
+            <if test="reviewer != null  and reviewer != ''">#{reviewer},</if>
+            <if test="sku != null  and sku != ''">#{sku},</if>
+            <if test="productLevel != null  and productLevel != ''">#{productLevel},</if>
+            <if test="mom != null ">#{mom},</if>
+            <if test="lastYearSales != null ">#{lastYearSales},</if>
+            <if test="monthlySales != null ">#{monthlySales},</if>
+            <if test="forecastMonthlySales != null ">#{forecastMonthlySales},</if>
+            <if test="lastDemand != null ">#{lastDemand},</if>
+            <if test="suggestedAmount != null ">#{suggestedAmount},</if>
+            <if test="demand != null ">#{demand},</if>
+            <if test="twoDemand != null ">#{twoDemand},</if>
+            <if test="outofstockDays != null ">#{outofstockDays},</if>
+            <if test="noOutofstockSales != null ">#{noOutofstockSales},</if>
+            <if test="createDate != null ">#{createDate},</if>
+            <if test="updateDate != null ">#{updateDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSalesforcastInfo" parameterType="SalesforcastInfo">
+        update mis_salesforcast_info
+        <trim prefix="SET" suffixOverrides=",">
+            <!--<if test="period != null ">period = #{period},</if>-->
+            <!--<if test="channel != null  and channel != ''">channel = #{channel},</if>-->
+            <!--<if test="salesman != null  and salesman != ''">salesman = #{salesman},</if>-->
+            <!--<if test="forecastMonth != null ">forecast_month = #{forecastMonth},</if>-->
+            <!--<if test="reviewer != null  and reviewer != ''">reviewer = #{reviewer},</if>-->
+            <!--<if test="sku != null  and sku != ''">sku = #{sku},</if>-->
+            <!--<if test="productLevel != null  and productLevel != ''">product_level = #{productLevel},</if>-->
+            <!--<if test="mom != null ">mom = #{mom},</if>-->
+            <!--<if test="lastYearSales != null ">last_year_sales = #{lastYearSales},</if>-->
+            <!--<if test="monthlySales != null ">monthly_sales = #{monthlySales},</if>-->
+            <!--<if test="forecastMonthlySales != null ">forecast_monthly_sales = #{forecastMonthlySales},</if>-->
+            <!--<if test="lastDemand != null ">last_demand = #{lastDemand},</if>-->
+            <!--<if test="suggestedAmount != null ">suggested_amount = #{suggestedAmount},</if>-->
+            <!--<if test="demand != null ">demand = if(IFNULL(last_demand,9999999)>=#{demand},#{demand},last_demand),</if>-->
+            <if test="demand != null ">demand = #{demand},</if>
+            <if test="twoDemand != null ">two_demand = #{twoDemand},</if>
+            <if test="outofstockDays != null ">outofstock_days = #{outofstockDays},</if>
+            <if test="noOutofstockSales != null ">no_outofstock_sales = #{noOutofstockSales},</if>
+        </trim>
+        where
+        <if test="salesforcastInfoId !=null">
+            salesforcast_info_id = #{salesforcastInfoId}
+        </if>
+
+        <if test="salesforcastInfoId ==null">
+            period = #{period} and
+            channel = #{channel} and
+            forecast_month = #{forecastMonth} and
+            sku = #{sku} and reviewer is null
+        </if>
+    </update>
+
+    <delete id="deleteSalesforcastInfoById" parameterType="Long">
+        delete from mis_salesforcast_info where salesforcast_info_id = #{salesforcastInfoId}
+    </delete>
+
+    <delete id="deleteSalesforcastInfoByIds" parameterType="String">
+        delete from mis_salesforcast_info where salesforcast_info_id in
+        <foreach item="salesforcastInfoId" collection="array" open="(" separator="," close=")">
+            #{salesforcastInfoId}
+        </foreach>
+    </delete>
+
+</mapper>

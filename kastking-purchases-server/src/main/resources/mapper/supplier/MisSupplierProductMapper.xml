@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.supplierProduct.mapper.MisSupplierProductMapper">
+
+    <resultMap type="MisSupplierProduct" id="MisSupplierProductResult">
+        <result property="productId" column="product_id"/>
+        <result property="supplierId" column="supplier_id"/>
+        <result property="sku" column="sku"/>
+        <result property="currency" column="currency"/>
+        <result property="taxPoint" column="tax_point"/>
+        <result property="noUnitPrice" column="no_unit_price"/>
+        <result property="unitPrice" column="unit_price"/>
+        <result property="productionCycle" column="production_cycle"/>
+        <result property="minimumOrder" column="minimum_order"/>
+        <result property="qty" column="qty"/>
+        <result property="status" column="status"/>
+        <result property="upToDate" column="up_to_date"/>
+        <result property="stepPrice" column="step_price"/>
+        <result property="logo" column="logo"/>
+        <result property="remark" column="remark"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+    <sql id="selectMisSupplierProductVo">
+        select product_id, supplier_id, sku, currency, tax_point, no_unit_price,
+        (tax_point/100*no_unit_price)+no_unit_price as unit_price,
+        production_cycle, minimum_order, qty, status, up_to_date, step_price,logo, remark, create_date, update_date from
+        mis_supplier_product
+    </sql>
+
+    <select id="selectMisSupplierProductList" parameterType="MisSupplierProduct" resultMap="MisSupplierProductResult">
+        <include refid="selectMisSupplierProductVo"/>
+        <where>
+            <if test="sku != null  and sku != ''">and sku like concat('%', #{sku}, '%')</if>
+            <if test="logo != null  and logo != ''">and logo=#{logo}</if>
+            <if test="supplierId != null ">and supplier_id = #{supplierId}</if>
+            and is_show=1
+        </where>
+    </select>
+
+    <select id="selectMisSupplierProductById" parameterType="Long" resultMap="MisSupplierProductResult">
+        <include refid="selectMisSupplierProductVo"/>
+        where product_id = #{productId} and is_show=1
+    </select>
+
+    <insert id="insertMisSupplierProduct" parameterType="MisSupplierProduct" useGeneratedKeys="true"
+            keyProperty="productId">
+        insert into mis_supplier_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supplierId != null ">supplier_id,</if>
+            <if test="sku != null  and sku != ''">sku,</if>
+            <if test="currency != null  and currency != ''">currency,</if>
+            <if test="taxPoint != null ">tax_point,</if>
+            <if test="noUnitPrice != null ">no_unit_price,</if>
+            <if test="productionCycle != null ">production_cycle,</if>
+            <if test="minimumOrder != null ">minimum_order,</if>
+            <if test="qty != null ">qty,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="upToDate != null  and upToDate != ''">up_to_date,</if>
+            <if test="stepPrice != null  and stepPrice != ''">step_price,</if>
+            <if test="logo != null  and logo != ''">logo,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="createDate != null ">create_date,</if>
+            <if test="updateDate != null ">update_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supplierId != null ">#{supplierId},</if>
+            <if test="sku != null  and sku != ''">#{sku},</if>
+            <if test="currency != null  and currency != ''">#{currency},</if>
+            <if test="taxPoint != null ">#{taxPoint},</if>
+            <if test="noUnitPrice != null ">#{noUnitPrice},</if>
+            <if test="productionCycle != null ">#{productionCycle},</if>
+            <if test="minimumOrder != null ">#{minimumOrder},</if>
+            <if test="qty != null ">#{qty},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="upToDate != null  and upToDate != ''">#{upToDate},</if>
+            <if test="stepPrice != null  and stepPrice != ''">#{stepPrice},</if>
+            <if test="logo != null  and logo != ''">#{logo},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="createDate != null ">#{createDate},</if>
+            <if test="updateDate != null ">#{updateDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMisSupplierProduct" parameterType="MisSupplierProduct">
+        update mis_supplier_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supplierId != null ">supplier_id = #{supplierId},</if>
+            <if test="sku != null  and sku != ''">sku = #{sku},</if>
+            <if test="currency != null  and currency != ''">currency = #{currency},</if>
+            <if test="taxPoint != null ">tax_point = #{taxPoint},</if>
+            <if test="noUnitPrice != null ">no_unit_price = #{noUnitPrice},</if>
+            <if test="productionCycle != null ">production_cycle = #{productionCycle},</if>
+            <if test="minimumOrder != null ">minimum_order = #{minimumOrder},</if>
+            <if test="qty != null ">qty = #{qty},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="upToDate != null  and upToDate != ''">up_to_date = #{upToDate},</if>
+            <if test="stepPrice != null  and stepPrice != ''">step_price = #{stepPrice},</if>
+            <if test="logo != null  and logo != ''">logo =#{logo},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="createDate != null ">create_date = #{createDate},</if>
+            <if test="updateDate != null ">update_date = #{updateDate},</if>
+        </trim>
+        where product_id = #{productId}
+    </update>
+
+    <update id="deleteMisSupplierProductById" parameterType="Long">
+        update mis_supplier_product set is_show=0 where product_id = #{productId}
+    </update>
+
+    <update id="deleteMisSupplierProductByIds" parameterType="String">
+        update mis_supplier_product set is_show=0 where product_id in
+        <foreach item="productId" collection="array" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </update>
+
+    <select id="verificationSku" resultType="Long" parameterType="MisSupplierProduct">
+        select product_id from mis_supplier_product
+        <where>
+            sku=#{sku} and is_show=1
+            <if test="productId!=null">
+                and product_id !=#{productId}
+            </if>
+        </where>
+        LIMIT 0,1
+    </select>
+</mapper>

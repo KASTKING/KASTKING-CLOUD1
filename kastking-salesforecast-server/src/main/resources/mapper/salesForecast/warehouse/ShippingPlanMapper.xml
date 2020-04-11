@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.warehouse.mapper.ShippingPlanMapper">
+
+    <resultMap type="ShippingPlan" id="ShippingPlanResult">
+        <result property="shippingPlanId" column="shipping_plan_id"/>
+        <result property="period" column="period"/>
+        <result property="warehouse" column="warehouse"/>
+        <result property="sku" column="sku"/>
+        <result property="shipNum" column="ship_num"/>
+    </resultMap>
+
+    <sql id="selectShippingPlanVo">
+        select shipping_plan_id, period, warehouse, sku, ship_num from mis_shipping_plan
+    </sql>
+
+    <select id="selectShippingPlanList" parameterType="ShippingPlan" resultMap="ShippingPlanResult">
+        <include refid="selectShippingPlanVo"/>
+        <where>
+            <if test="period != null ">and period = #{period}</if>
+            <if test="warehouse != null  and warehouse != ''">and warehouse = #{warehouse}</if>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+            <if test="shipNum != null ">and ship_num = #{shipNum}</if>
+        </where>
+    </select>
+
+    <select id="selectShippingPlanById" parameterType="Long" resultMap="ShippingPlanResult">
+        <include refid="selectShippingPlanVo"/>
+        where shipping_plan_id = #{shippingPlanId}
+    </select>
+
+    <insert id="insertShippingPlan" parameterType="ShippingPlan" useGeneratedKeys="true" keyProperty="shippingPlanId">
+        insert into mis_shipping_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="period != null ">period,</if>
+            <if test="warehouse != null  and warehouse != ''">warehouse,</if>
+            <if test="sku != null  and sku != ''">sku,</if>
+            <if test="shipNum != null ">ship_num,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="period != null ">#{period},</if>
+            <if test="warehouse != null  and warehouse != ''">#{warehouse},</if>
+            <if test="sku != null  and sku != ''">#{sku},</if>
+            <if test="shipNum != null ">#{shipNum},</if>
+        </trim>
+    </insert>
+
+    <update id="updateShippingPlan" parameterType="ShippingPlan">
+        update mis_shipping_plan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="period != null ">period = #{period},</if>
+            <if test="warehouse != null  and warehouse != ''">warehouse = #{warehouse},</if>
+            <if test="sku != null  and sku != ''">sku = #{sku},</if>
+            <if test="shipNum != null ">ship_num = #{shipNum},</if>
+        </trim>
+        where shipping_plan_id = #{shippingPlanId}
+    </update>
+
+    <delete id="deleteShippingPlanById" parameterType="Long">
+        delete from mis_shipping_plan where shipping_plan_id = #{shippingPlanId}
+    </delete>
+
+    <delete id="deleteShippingPlanByIds" parameterType="String">
+        delete from mis_shipping_plan where shipping_plan_id in
+        <foreach item="shippingPlanId" collection="array" open="(" separator="," close=")">
+            #{shippingPlanId}
+        </foreach>
+    </delete>
+
+</mapper>

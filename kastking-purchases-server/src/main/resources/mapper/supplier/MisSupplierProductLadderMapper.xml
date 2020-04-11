@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.productLadder.mapper.MisSupplierProductLadderMapper">
+
+    <resultMap type="MisSupplierProductLadder" id="MisSupplierProductLadderResult">
+        <result property="stepId" column="step_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="sku" column="sku"/>
+        <result property="priceOne" column="price_one"/>
+        <result property="priceTwo" column="price_two"/>
+        <result property="unitPrice" column="unit_price"/>
+    </resultMap>
+
+    <sql id="selectMisSupplierProductLadderVo">
+        select step_id, a.product_id,b.sku, price_one, price_two, a.unit_price from mis_supplier_product_ladder a LEFT
+        JOIN mis_supplier_product b on a.product_id=b.product_id
+    </sql>
+
+    <select id="selectMisSupplierProductLadderList" parameterType="MisSupplierProductLadder"
+            resultMap="MisSupplierProductLadderResult">
+        <include refid="selectMisSupplierProductLadderVo"/>
+        <where>
+            <if test="sku != null  and sku != ''">and sku like concat('%', #{sku}, '%')</if>
+            <if test="productId != null ">and a.product_id = #{productId}</if>
+            <if test="priceOne != null ">and price_one = #{priceOne}</if>
+            <if test="priceTwo != null ">and price_two = #{priceTwo}</if>
+            <if test="unitPrice != null ">and a.unit_price = #{unitPrice}</if>
+        </where>
+    </select>
+
+    <select id="selectMisSupplierProductLadderById" parameterType="Long" resultMap="MisSupplierProductLadderResult">
+        <include refid="selectMisSupplierProductLadderVo"/>
+        where step_id = #{stepId}
+    </select>
+
+    <insert id="insertMisSupplierProductLadder" parameterType="MisSupplierProductLadder" useGeneratedKeys="true"
+            keyProperty="stepId">
+        insert into mis_supplier_product_ladder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null ">product_id,</if>
+            <if test="priceOne != null ">price_one,</if>
+            <if test="priceTwo != null ">price_two,</if>
+            <if test="unitPrice != null ">unit_price,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null ">#{productId},</if>
+            <if test="priceOne != null ">#{priceOne},</if>
+            <if test="priceTwo != null ">#{priceTwo},</if>
+            <if test="unitPrice != null ">#{unitPrice},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMisSupplierProductLadder" parameterType="MisSupplierProductLadder">
+        update mis_supplier_product_ladder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null ">product_id = #{productId},</if>
+            <if test="priceOne != null ">price_one = #{priceOne},</if>
+            <if test="priceTwo != null ">price_two = #{priceTwo},</if>
+            <if test="unitPrice != null ">unit_price = #{unitPrice},</if>
+        </trim>
+        where step_id = #{stepId}
+    </update>
+
+    <delete id="deleteMisSupplierProductLadderById" parameterType="Long">
+        delete from mis_supplier_product_ladder where step_id = #{stepId}
+    </delete>
+
+    <delete id="deleteMisSupplierProductLadderByHeadId" parameterType="Long">
+        delete from mis_supplier_product_ladder where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteMisSupplierProductLadderByIds" parameterType="String">
+        delete from mis_supplier_product_ladder where step_id in
+        <foreach item="stepId" collection="array" open="(" separator="," close=")">
+            #{stepId}
+        </foreach>
+    </delete>
+
+</mapper>

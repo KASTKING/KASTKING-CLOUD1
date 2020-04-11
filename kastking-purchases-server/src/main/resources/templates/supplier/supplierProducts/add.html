@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增供应商产品')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-supplierProducts-add">
+        <input id="str1" name="str1" type="hidden"/>
+        <input id="str2" name="str2" type="hidden"/>
+        <input id="str3" name="str3" type="hidden"/>
+        <input id="str4" name="str4" type="hidden"/>
+        <input id="str5" name="str5" type="hidden"/>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label is-required">供应商：</label>
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <input name="supplierId" type="hidden" th:value="${misSupplierInfo.supplierId}">
+                    <input id="buyer" class="form-control" type="text" th:field="${misSupplierInfo.buyer}"
+                           disabled="disabled">
+                </div>
+            </div>
+            <label class="col-sm-2 control-label">SKU：</label>
+            <div class="col-sm-4">
+                <input name="sku" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">币种：</label>
+            <div class="col-sm-4">
+                <input name="currency" class="form-control" type="text">
+            </div>
+            <label class="col-sm-2 control-label">税点(%)：</label>
+            <div class="col-sm-4">
+                <input name="taxPoint" class="form-control" type="number">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">单价(不含税)：</label>
+            <div class="col-sm-4">
+                <input name="noUnitPrice" class="form-control" type="number">
+            </div>
+            <label class="col-sm-2 control-label">生产周期(天)：</label>
+            <div class="col-sm-4">
+                <input name="productionCycle" class="form-control" type="number">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">最小下单数：</label>
+            <div class="col-sm-4">
+                <input name="minimumOrder" class="form-control" type="number">
+            </div>
+            <label class="col-sm-2 control-label">装箱数：</label>
+            <div class="col-sm-4">
+                <input name="qty" class="form-control" type="number">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">状态：</label>
+            <div class="col-sm-4">
+                <input name="status" class="form-control" type="text">
+            </div>
+            <label class="col-sm-2 control-label">标识：</label>
+            <div class="col-sm-4">
+                <select id="logo" class="form-control m-b" name="logo">
+                    <option value="成品" selected>成品</option>
+                    <option value="配件">配件</option>
+                    <option value="包材">包材</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">是否最新：</label>
+            <div class="col-sm-4">
+                <div class="radio-box" th:each="dict : ${@dict.getType('sys_yes_no')}">
+                    <input type="radio" th:id="${dict.dictCode}" name="upToDate" th:value="${dict.dictValue}"
+                           th:checked="${dict.default}">
+                    <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                </div>
+            </div>
+            <label class="col-sm-2 control-label">是否阶梯价：</label>
+            <div class="col-sm-4">
+                <div class="radio-box" th:each="dict : ${@dict.getType('sys_yes_no')}">
+                    <input type="radio" th:id="${dict.dictCode}" name="stepPrice" th:value="${dict.dictValue}"
+                           th:checked="${dict.isDefault}">
+                    <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                </div>
+            </div>
+        </div>
+        <div id="divs" style="display:none">
+            <div class="form-group" id="jtj1">
+                <label class="col-sm-3 control-label">阶梯价一：</label>
+                <div class="col-sm-9">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <input type="number" name="names1" placeholder="价格1" class="form-control" min="0.01"
+                                   style="width: 90px">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="number" name="namee1" placeholder="价格2" class="form-control" min="0.01"
+                                   style="width: 90px">
+                        </div>
+                        <div class="col-sm-8">
+                            <label class="col-sm-4 control-label">单价：</label>
+                            <div class="col-sm-4">
+                                <input type="number" placeholder="0" name="namep1" class="form-control" min="0.01">
+                            </div>
+                            <div class="col-sm-4">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="addDiv(this)">新增阶梯价
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">备注：</label>
+            <div class="col-sm-10">
+                <input name="remark" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<script type="text/javascript">
+    $(function () {
+        //判断是否阶梯价
+        $('input[type=radio][name=stepPrice]').on('ifChecked', function (event) {
+            var menuType = $(event.target).val();
+            if (menuType == "Y") {
+                //显示阶梯价div
+                $("#divs").show();
+            } else if (menuType == "N") {
+                //显示阶梯价一
+                $('#divs>div:not(:first)').remove();
+                $("#jtj1").find("input").removeAttr("disabled").val("");
+                $("#jtj1").find("button").removeAttr("disabled");
+                $("#divs").hide();
+            }
+        });
+    })
+    var prefix = ctx + "supplier/supplierProducts"
+    $("#form-supplierProducts-add").validate({
+        focusCleanup: true
+    });
+
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            if ($('input[name="stepPrice"]:checked').val() == "Y") {
+                if ($("#jtj1").find('button').eq(0).prop("disabled") == false) {
+                    alert("请先点新增阶梯价按钮")
+                    return;
+                } else {
+                    if ($("input[name=names1]").val() != null && $("input[name=namee1]").val() != null && $("input[name=namep1]").val() != null) {
+                        $("#str1").val($("input[name=names1]").val() + "-" + $("input[name=namee1]").val() + "/" + $("input[name=namep1]").val())
+                    }
+                }
+
+                if ($("input[name=names2]").val() != "" || $("input[name=namee2]").val() != "" || $("input[name=namep2]").val() != "") {
+                    if ($("#jtj2").find('button').eq(0).prop("disabled") == false) {
+                        alert("请先点新增阶梯价按钮")
+                        return;
+                    } else {
+                        if ($("input[name=names2]").val() != null && $("input[name=namee2]").val() != null && $("input[name=namep2]").val() != null) {
+                            $("#str2").val($("input[name=names2]").val() + "-" + $("input[name=namee2]").val() + "/" + $("input[name=namep2]").val())
+                        }
+                    }
+                }
+
+                if ($("input[name=names3]").val() != "" || $("input[name=namee3]").val() != "" || $("input[name=namep3]").val() != "") {
+                    if ($("#jtj3").find('button').eq(0).prop("disabled") == false) {
+                        alert("请先点新增阶梯价按钮")
+                        return;
+                    } else {
+                        if ($("input[name=names3]").val() != null && $("input[name=namee3]").val() != null && $("input[name=namep3]").val() != null) {
+                            $("#str3").val($("input[name=names3]").val() + "-" + $("input[name=namee3]").val() + "/" + $("input[name=namep3]").val())
+                        }
+                    }
+                }
+                if ($("input[name=names4]").val() != "" || $("input[name=namee4]").val() != "" || $("input[name=namep4]").val() != "") {
+                    if ($("#jtj4").find('button').eq(0).prop("disabled") == false) {
+                        alert("请先点新增阶梯价按钮")
+                        return;
+                    } else {
+                        if ($("input[name=names4]").val() != null && $("input[name=namee4]").val() != null && $("input[name=namep4]").val() != null) {
+                            $("#str4").val($("input[name=names4]").val() + "-" + $("input[name=namee4]").val() + "/" + $("input[name=namep4]").val())
+                        }
+                    }
+                }
+                if ($("input[name=names5]").val() != "" || $("input[name=namee5]").val() != "" || $("input[name=namep5]").val() != "") {
+                    if ($("#jtj5").find('button').eq(0).prop("disabled") == false) {
+                        alert("请先点新增阶梯价按钮")
+                        return;
+                    } else {
+                        if ($("input[name=names5]").val() != null && $("input[name=namee5]").val() != null && $("input[name=namep5]").val() != null) {
+                            $("#str5").val($("input[name=names5]").val() + "-" + $("input[name=namee5]").val() + "/" + $("input[name=namep5]").val())
+                        }
+                    }
+                }
+            }
+            $.operate.save(prefix + "/add", $('#form-supplierProducts-add').serialize());
+        }
+    }
+
+    //新增阶梯价
+    function addDiv(div) {
+        var divs = $(div);
+        var fa1 = divs.parent().parent().parent().parent().parent();
+        var id = fa1.attr("id");
+        var fa2 = fa1;
+        if (id == "jtj1") {
+            if ($("#jtj2").length > 0) {
+                return;
+            } else {
+                if (divs.parent().parent().parent().children(":first").children(":first").val() == "" || divs.parent().parent().parent().children(":first").children(":first").val() == null) {
+                    divs.parent().parent().parent().children(":first").children(":first").focus();
+                } else if (divs.parent().parent().prev().children(":first").val() == "" || divs.parent().parent().prev().children(":first").val() == null) {
+                    divs.parent().parent().prev().children(":first").focus();
+                } else if (divs.parent().prev().children(":first").val() == "" || divs.parent().prev().children(":first").val() == null) {
+                    divs.parent().prev().children(":first").focus();
+                } else {
+                    if (parseFloat(divs.parent().parent().parent().children(":first").children(":first").val()) <= parseFloat(fa1.prev().find('input').eq(1).val())) {
+                        alert("价格1不能低于上阶段的价格2！");
+                        divs.parent().parent().parent().children(":first").children(":first").focus();
+                    } else if (parseFloat(fa1.find('input').eq(0).val()) >= parseFloat(fa1.find('input').eq(1).val())) {
+                        alert("价格2不能低于价格1！");
+                        divs.parent().parent().prev().children(":first").focus();
+                    } else {
+                        fa2.children(":first").text("阶梯价二：");
+                        fa1.after("<div class=\"form-group\" id=\"jtj2\">" + fa2.html() + "</div>");
+                        fa1.next().find('input').eq(0).attr("name", "names2");
+                        fa1.next().find('input').eq(1).attr("name", "namee2");
+                        fa1.next().find('input').eq(2).attr("name", "namep2");
+                        fa1.children(":first").text("阶梯价一：");
+                        fa1.find('input').eq(0).attr("disabled", "disabled");
+                        fa1.find('input').eq(1).attr("disabled", "disabled");
+                        fa1.find('input').eq(2).attr("disabled", "disabled");
+                        fa1.find('button').eq(0).attr("disabled", "disabled");
+                    }
+                }
+            }
+        } else if (id == "jtj2") {
+            if ($("#jtj3").length > 0) {
+                return;
+            } else {
+                if (divs.parent().parent().parent().children(":first").children(":first").val() == "" || divs.parent().parent().parent().children(":first").children(":first").val() == null) {
+                    divs.parent().parent().parent().children(":first").children(":first").focus();
+                } else if (divs.parent().parent().prev().children(":first").val() == "" || divs.parent().parent().prev().children(":first").val() == null) {
+                    divs.parent().parent().prev().children(":first").focus();
+                } else if (divs.parent().prev().children(":first").val() == "" || divs.parent().prev().children(":first").val() == null) {
+                    divs.parent().prev().children(":first").focus();
+                } else {
+                    if (parseFloat(divs.parent().parent().parent().children(":first").children(":first").val()) <= parseFloat(fa1.prev().find('input').eq(1).val())) {
+                        alert("价格1不能低于上阶段的价格2！");
+                        divs.parent().parent().parent().children(":first").children(":first").focus();
+                    } else if (parseFloat(fa1.find('input').eq(0).val()) >= parseFloat(fa1.find('input').eq(1).val())) {
+                        alert("价格2不能低于价格1！");
+                        divs.parent().parent().prev().children(":first").focus();
+                    } else {
+                        fa2.children(":first").text("阶梯价三：");
+                        fa1.after("<div class=\"form-group\" id=\"jtj3\">" + fa2.html() + "</div>");
+                        fa1.next().find('input').eq(0).attr("name", "names3");
+                        fa1.next().find('input').eq(1).attr("name", "namee3");
+                        fa1.next().find('input').eq(2).attr("name", "namep3");
+                        fa1.children(":first").text("阶梯价二：");
+                        fa1.find('input').eq(0).attr("disabled", "disabled");
+                        fa1.find('input').eq(1).attr("disabled", "disabled");
+                        fa1.find('input').eq(2).attr("disabled", "disabled");
+                        fa1.find('button').eq(0).attr("disabled", "disabled");
+                    }
+                }
+            }
+        } else if (id == "jtj3") {
+            if ($("#jtj4").length > 0) {
+                return;
+            } else {
+                if (divs.parent().parent().parent().children(":first").children(":first").val() == "" || divs.parent().parent().parent().children(":first").children(":first").val() == null) {
+                    divs.parent().parent().parent().children(":first").children(":first").focus();
+                } else if (divs.parent().parent().prev().children(":first").val() == "" || divs.parent().parent().prev().children(":first").val() == null) {
+                    divs.parent().parent().prev().children(":first").focus();
+                } else if (divs.parent().prev().children(":first").val() == "" || divs.parent().prev().children(":first").val() == null) {
+                    divs.parent().prev().children(":first").focus();
+                } else {
+                    if (parseFloat(divs.parent().parent().parent().children(":first").children(":first").val()) <= parseFloat(fa1.prev().find('input').eq(1).val())) {
+                        alert("价格1不能低于上阶段的价格2！");
+                        divs.parent().parent().parent().children(":first").children(":first").focus();
+                    } else if (parseFloat(fa1.find('input').eq(0).val()) >= parseFloat(fa1.find('input').eq(1).val())) {
+                        alert("价格2不能低于价格1！");
+                        divs.parent().parent().prev().children(":first").focus();
+                    } else {
+                        fa2.children(":first").text("阶梯价四：");
+                        fa1.after("<div class=\"form-group\" id=\"jtj4\">" + fa2.html() + "</div>");
+                        fa1.next().find('input').eq(0).attr("name", "names4");
+                        fa1.next().find('input').eq(1).attr("name", "namee4");
+                        fa1.next().find('input').eq(2).attr("name", "namep4");
+                        fa1.children(":first").text("阶梯价三：");
+                        fa1.find('input').eq(0).attr("disabled", "disabled");
+                        fa1.find('input').eq(1).attr("disabled", "disabled");
+                        fa1.find('input').eq(2).attr("disabled", "disabled");
+                        fa1.find('button').eq(0).attr("disabled", "disabled");
+                    }
+                }
+            }
+        } else if (id == "jtj4") {
+            if ($("#jtj5").length > 0) {
+                return;
+            } else {
+                if (divs.parent().parent().parent().children(":first").children(":first").val() == "" || divs.parent().parent().parent().children(":first").children(":first").val() == null) {
+                    divs.parent().parent().parent().children(":first").children(":first").focus();
+                } else if (divs.parent().parent().prev().children(":first").val() == "" || divs.parent().parent().prev().children(":first").val() == null) {
+                    divs.parent().parent().prev().children(":first").focus();
+                } else if (divs.parent().prev().children(":first").val() == "" || divs.parent().prev().children(":first").val() == null) {
+                    divs.parent().prev().children(":first").focus();
+                } else {
+                    if (parseFloat(divs.parent().parent().parent().children(":first").children(":first").val()) <= parseFloat(fa1.prev().find('input').eq(1).val())) {
+                        alert("价格1不能低于上阶段的价格2！");
+                        divs.parent().parent().parent().children(":first").children(":first").focus();
+                    } else if (parseFloat(fa1.find('input').eq(0).val()) >= parseFloat(fa1.find('input').eq(1).val())) {
+                        alert("价格2不能低于价格1！");
+                        divs.parent().parent().prev().children(":first").focus();
+                    } else {
+                        fa2.children(":first").text("阶梯价五：");
+                        fa1.after("<div class=\"form-group\" id=\"jtj5\">" + fa2.html() + "</div>");
+                        fa1.next().find('input').eq(0).attr("name", "names5");
+                        fa1.next().find('input').eq(1).attr("name", "namee5");
+                        fa1.next().find('input').eq(2).attr("name", "namep5");
+                        fa1.children(":first").text("阶梯价四：");
+                        fa1.find('input').eq(0).attr("disabled", "disabled");
+                        fa1.find('input').eq(1).attr("disabled", "disabled");
+                        fa1.find('input').eq(2).attr("disabled", "disabled");
+                        fa1.find('button').eq(0).attr("disabled", "disabled");
+                    }
+                }
+            }
+        } else if (id == "jtj5") {
+            if (divs.parent().parent().parent().children(":first").children(":first").val() == "" || divs.parent().parent().parent().children(":first").children(":first").val() == null) {
+                divs.parent().parent().parent().children(":first").children(":first").focus();
+            } else if (divs.parent().parent().prev().children(":first").val() == "" || divs.parent().parent().prev().children(":first").val() == null) {
+                divs.parent().parent().prev().children(":first").focus();
+            } else if (divs.parent().prev().children(":first").val() == "" || divs.parent().prev().children(":first").val() == null) {
+                divs.parent().prev().children(":first").focus();
+            } else {
+                if (parseFloat(divs.parent().parent().parent().children(":first").children(":first").val()) <= parseFloat(fa1.prev().find('input').eq(1).val())) {
+                    alert("价格1不能低于上阶段的价格2！");
+                    divs.parent().parent().parent().children(":first").children(":first").focus();
+                } else if (parseFloat(fa1.find('input').eq(0).val()) >= parseFloat(fa1.find('input').eq(1).val())) {
+                    alert("价格2不能低于价格1！");
+                    divs.parent().parent().prev().children(":first").focus();
+                } else {
+                    fa1.find('input').eq(0).attr("disabled", "disabled");
+                    fa1.find('input').eq(1).attr("disabled", "disabled");
+                    fa1.find('input').eq(2).attr("disabled", "disabled");
+                    fa1.find('button').eq(0).attr("disabled", "disabled");
+                    $("input[name='remark']").focus();
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

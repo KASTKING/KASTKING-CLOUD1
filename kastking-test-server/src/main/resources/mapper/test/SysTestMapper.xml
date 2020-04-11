@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.test.mapper.SysTestMapper">
+
+    <resultMap type="com.kastking.test.domain.SysTest" id="SysTestResult">
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="id" column="id"/>
+    </resultMap>
+
+    <sql id="selectSysTestVo">
+        select name, type, id from sys_test
+    </sql>
+
+    <select id="selectSysTestList" parameterType="com.kastking.test.domain.SysTest" resultMap="SysTestResult">
+        <include refid="selectSysTestVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+        </where>
+    </select>
+
+    <select id="selectSysTestById" parameterType="Long" resultMap="SysTestResult">
+        <include refid="selectSysTestVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysTest" parameterType="com.kastking.test.domain.SysTest" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_test
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="type != null  and type != ''">type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysTest" parameterType="com.kastking.test.domain.SysTest">
+        update sys_test
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysTestById" parameterType="Long">
+        delete from sys_test where id = #{id}
+    </delete>
+
+    <delete id="deleteSysTestByIds" parameterType="String">
+        delete from sys_test where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

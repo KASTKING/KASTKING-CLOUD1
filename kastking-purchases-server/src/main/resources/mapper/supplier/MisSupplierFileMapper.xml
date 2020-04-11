@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.supplierfile.mapper.MisSupplierFileMapper">
+
+    <resultMap type="MisSupplierFile" id="MisSupplierFileResult">
+        <result property="certificateId" column="certificate_id"/>
+        <result property="fatherId" column="father_id"/>
+        <result property="type" column="type"/>
+        <result property="types" column="types"/>
+        <result property="fatherName" column="father_name"/>
+        <result property="caption" column="caption"/>
+        <result property="size" column="size"/>
+        <result property="annex" column="annex"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+    <sql id="selectMisSupplierFileVo">
+        select * from (select certificate_id, a.father_id,
+        case when b.buyer is null
+        then c.sku
+        when b.buyer is not null
+        then b.buyer
+        else null end
+        as father_name,
+        type,caption,size,types, a.annex, a.create_date, a.update_date
+        from mis_supplier_file a
+        left join mis_supplier_info b on a.father_id=b.supplier_id and type='供应商信息'
+        left join mis_supplier_product c on a.father_id=c.product_id and type='供应商产品') t
+    </sql>
+
+    <select id="selectMisSupplierFileList" parameterType="MisSupplierFile" resultMap="MisSupplierFileResult">
+        <include refid="selectMisSupplierFileVo"/>
+        <where>
+            <if test="fatherId != null">and father_id = #{fatherId}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="annex != null  and annex != ''">and annex = #{annex}</if>
+            <if test="caption != null  and caption != ''">and caption like concat('%', #{caption}, '%')</if>
+            <if test="fatherName != null  and fatherName != ''">and father_name like concat('%', #{fatherName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectMisSupplierFileById" parameterType="Long" resultMap="MisSupplierFileResult">
+        <include refid="selectMisSupplierFileVo"/>
+        where certificate_id = #{certificateId}
+    </select>
+
+    <insert id="insertMisSupplierFile" parameterType="MisSupplierFile" useGeneratedKeys="true"
+            keyProperty="certificateId">
+        insert into mis_supplier_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fatherId != null ">father_id,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="caption != null  and caption != ''">caption,</if>
+            <if test="types != null  and types != ''">types,</if>
+            <if test="size != null">size,</if>
+            <if test="annex != null  and annex != ''">annex,</if>
+            <if test="createDate != null ">create_date,</if>
+            <if test="updateDate != null ">update_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fatherId != null ">#{fatherId},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="caption != null  and caption != ''">#{caption},</if>
+            <if test="types != null  and types != ''">#{types},</if>
+            <if test="size != null">#{size},</if>
+            <if test="annex != null  and annex != ''">#{annex},</if>
+            <if test="createDate != null ">#{createDate},</if>
+            <if test="updateDate != null ">#{updateDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMisSupplierFile" parameterType="MisSupplierFile">
+        update mis_supplier_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fatherId != null ">father_id = #{fatherId},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="caption != null  and caption != ''">caption=#{caption},</if>
+            <if test="types != null  and types != ''">types=#{types},</if>
+            <if test="size != null">size=#{size},</if>
+            <if test="annex != null  and annex != ''">annex = #{annex},</if>
+            <if test="createDate != null ">create_date = #{createDate},</if>
+            <if test="updateDate != null ">update_date = #{updateDate},</if>
+        </trim>
+        where certificate_id = #{certificateId}
+    </update>
+
+    <delete id="deleteMisSupplierFileById" parameterType="Long">
+        delete from mis_supplier_file where certificate_id = #{certificateId}
+    </delete>
+
+    <delete id="deleteMisSupplierFileByIds" parameterType="String">
+        delete from mis_supplier_file where certificate_id in
+        <foreach item="certificateId" collection="array" open="(" separator="," close=")">
+            #{certificateId}
+        </foreach>
+    </delete>
+
+</mapper>

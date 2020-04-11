@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.salesForecastMom.mapper.SalesforecastMomMapper">
+
+    <resultMap type="SalesforecastMom" id="SalesforecastMomResult">
+        <result property="salesforecastMomId" column="salesforecast_mom_id"/>
+        <result property="years" column="years"/>
+        <result property="mom" column="mom"/>
+    </resultMap>
+
+    <sql id="selectSalesforecastMomVo">
+        select salesforecast_mom_id,years,mom from mis_salesforecast_mom
+    </sql>
+
+    <select id="selectSalesforecastMomList" parameterType="SalesforecastMom" resultMap="SalesforecastMomResult">
+        <include refid="selectSalesforecastMomVo"/>
+        <where>
+            <if test="years != null ">and years = #{years}</if>
+            <if test="mom != null ">and mom = #{mom}</if>
+        </where>
+    </select>
+
+    <select id="selectSalesforecastMomById" parameterType="Long" resultMap="SalesforecastMomResult">
+        <include refid="selectSalesforecastMomVo"/>
+        where salesforecast_mom_id = #{salesforecastMomId}
+    </select>
+
+    <insert id="insertSalesforecastMom" parameterType="SalesforecastMom" useGeneratedKeys="true"
+            keyProperty="salesforecastMomId">
+        insert into mis_salesforecast_mom
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="years != null ">years,</if>
+            <if test="mom != null ">mom,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="years != null ">#{years},</if>
+            <if test="mom != null ">#{mom},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSalesforecastMom" parameterType="SalesforecastMom">
+        update mis_salesforecast_mom
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="years != null ">years = #{years},</if>
+            <if test="mom != null ">mom = #{mom},</if>
+        </trim>
+        where salesforecast_mom_id = #{salesforecastMomId}
+    </update>
+
+    <delete id="deleteSalesforecastMomById" parameterType="Long">
+        delete from mis_salesforecast_mom where salesforecast_mom_id = #{salesforecastMomId}
+    </delete>
+
+    <delete id="deleteSalesforecastMomByIds" parameterType="String">
+        delete from mis_salesforecast_mom where salesforecast_mom_id in
+        <foreach item="salesforecastMomId" collection="array" open="(" separator="," close=")">
+            #{salesforecastMomId}
+        </foreach>
+    </delete>
+
+</mapper>

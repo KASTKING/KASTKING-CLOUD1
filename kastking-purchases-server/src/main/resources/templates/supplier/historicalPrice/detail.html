@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('供应商产品历史价格详情')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-misSupplierHistoricalPrice-edit">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">本期时间：</label>
+            <div class="form-control-static"
+                 th:text="${#dates.format(misSupplierHistoricalPrice.currentTime, 'yyyy-MM-dd')}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">SKU：</label>
+            <div class="form-control-static" th:text="${misSupplierHistoricalPrice.sku}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">币种：</label>
+            <div class="form-control-static" th:text="${misSupplierHistoricalPrice.currency}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">上期时间：</label>
+            <div class="form-control-static"
+                 th:text="${#dates.format(misSupplierHistoricalPrice.lastTime, 'yyyy-MM-dd')}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">上期税点：</label>
+            <div class="form-control-static" th:text="${misSupplierHistoricalPrice.lastTax}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">上期单价(不含税)：</label>
+            <div class="form-control-static" th:text="${misSupplierHistoricalPrice.lastNoPrice}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">上期单价(含税)：</label>
+            <div class="form-control-static" th:text="${misSupplierHistoricalPrice.lastPrice}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">本期税点：</label>
+            <div class="form-control-static" th:text="${misSupplierHistoricalPrice.taxPoint}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">本期单价(不含税)：</label>
+            <div class="form-control-static" th:text="${misSupplierHistoricalPrice.currentNoPrice}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">本期单价(含税)：</label>
+            <div class="form-control-static" th:text="${misSupplierHistoricalPrice.currentPrice}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">差值单价(不含税)：</label>
+            <div class="form-control-static" th:text="${misSupplierHistoricalPrice.differenceNoPrice}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">差值单价(含税)：</label>
+            <div class="form-control-static" th:text="${misSupplierHistoricalPrice.differencePrice}"></div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+</body>
+</html>

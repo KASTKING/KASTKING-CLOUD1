@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.personProduct.mapper.PersonProductMapper">
+
+    <resultMap type="PersonProduct" id="PersonProductResult">
+        <result property="personProductId" column="person_product_id"/>
+        <result property="platformChannelId" column="platform_channel_id"/>
+        <result property="sku" column="sku"/>
+        <result property="sellingPrice" column="selling_price"/>
+        <result property="isExpected" column="is_expected"/>
+        <result property="salesman" column="salesman"/>
+        <result property="memo" column="memo"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+    <sql id="selectPersonProductVo">
+        select person_product_id, mis_person_product.platform_channel_id, sku, selling_price, is_expected,
+        mis_person_product.memo, create_date, update_date ,mis_platform_channel.platform_channel as salesman
+        from mis_person_product inner join mis_platform_channel on
+        mis_person_product.platform_channel_id=mis_platform_channel.platform_channel_id
+    </sql>
+
+    <select id="selectPersonProductList" parameterType="PersonProduct" resultMap="PersonProductResult">
+        <include refid="selectPersonProductVo"/>
+        <where>
+            <if test="platformChannelId != null ">
+                and (mis_person_product.platform_channel_id = #{platformChannelId}
+                or mis_person_product.platform_channel_id in (select platform_channel_id from mis_platform_channel where
+                father_id=#{platformChannelId}))
+            </if>
+            <if test="sku != null  and sku != ''">and mis_person_product.sku = #{sku}</if>
+            <if test="sellingPrice != null ">and mis_person_product.selling_price = #{sellingPrice}</if>
+            <if test="isExpected != null and isExpected != ''">and mis_person_product.is_expected = #{isExpected}</if>
+            <if test="memo != null  and memo != ''">and mis_person_product.memo = #{memo}</if>
+            <if test="createDate != null ">and mis_person_product.create_date = #{createDate}</if>
+            <if test="updateDate != null ">and mis_person_product.update_date = #{updateDate}</if>
+        </where>
+    </select>
+
+    <select id="selectPersonProductById" parameterType="Long" resultMap="PersonProductResult">
+        <include refid="selectPersonProductVo"/>
+        where mis_person_product.person_product_id = #{personProductId}
+    </select>
+
+    <insert id="insertPersonProduct" parameterType="PersonProduct" useGeneratedKeys="true"
+            keyProperty="personProductId">
+        insert into mis_person_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platformChannelId != null ">platform_channel_id,channel_id,</if>
+            <if test="sku != null  and sku != ''">sku,</if>
+            <if test="sellingPrice != null ">selling_price,</if>
+            <if test="isExpected != null ">is_expected,</if>
+            <if test="memo != null  and memo != ''">memo,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platformChannelId != null ">#{platformChannelId},(select platform_channel_id from
+                mis_platform_channel where platform_channel=#{channel} and father_id!=0),
+            </if>
+            <if test="sku != null  and sku != ''">#{sku},</if>
+            <if test="sellingPrice != null ">#{sellingPrice},</if>
+            <if test="isExpected != null ">#{isExpected},</if>
+            <if test="memo != null  and memo != ''">#{memo},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePersonProduct" parameterType="PersonProduct">
+        update mis_person_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platformChannelId != null ">platform_channel_id = #{platformChannelId},</if>
+            <if test="sku != null  and sku != ''">sku = #{sku},</if>
+            <if test="sellingPrice != null ">selling_price = #{sellingPrice},</if>
+            <if test="isExpected != null ">is_expected = #{isExpected},</if>
+            <if test="memo != null  and memo != ''">memo = #{memo},</if>
+        </trim>
+        where person_product_id = #{personProductId}
+    </update>
+
+    <delete id="deletePersonProductById" parameterType="Long">
+        delete from mis_person_product where person_product_id = #{personProductId}
+    </delete>
+
+    <delete id="deletePersonProductByIds" parameterType="String">
+        delete from mis_person_product where person_product_id in
+        <foreach item="personProductId" collection="array" open="(" separator="," close=")">
+            #{personProductId}
+        </foreach>
+    </delete>
+
+</mapper>

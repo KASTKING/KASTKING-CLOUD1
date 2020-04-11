@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.testTree.mapper.SysTestTreeMapper">
+
+    <resultMap type="SysTestTree" id="SysTestTreeResult">
+        <result property="treeId" column="tree_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="treeName" column="tree_name"/>
+        <result property="parentName" column="parent_name"/>
+    </resultMap>
+
+    <sql id="selectSysTestTreeVo">
+        select tree_id, parent_id, tree_name from sys_test_tree
+    </sql>
+
+    <select id="selectSysTestTreeList" parameterType="SysTestTree" resultMap="SysTestTreeResult">
+        <include refid="selectSysTestTreeVo"/>
+        <where>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="treeName != null  and treeName != ''">and tree_name like concat('%', #{treeName}, '%')</if>
+        </where>
+        order by parent_id
+    </select>
+
+    <select id="selectSysTestTreeById" parameterType="Long" resultMap="SysTestTreeResult">
+        select t.tree_id, t.parent_id, t.tree_name, p.tree_name as parent_name
+        from sys_test_tree t
+        left join sys_test_tree p on p.tree_id = t.parent_id
+        where t.tree_id = #{treeId}
+    </select>
+
+    <insert id="insertSysTestTree" parameterType="SysTestTree" useGeneratedKeys="true" keyProperty="treeId">
+        insert into sys_test_tree
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">parent_id,</if>
+            <if test="treeName != null  and treeName != ''">tree_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="treeName != null  and treeName != ''">#{treeName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysTestTree" parameterType="SysTestTree">
+        update sys_test_tree
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="treeName != null  and treeName != ''">tree_name = #{treeName},</if>
+        </trim>
+        where tree_id = #{treeId}
+    </update>
+
+    <delete id="deleteSysTestTreeById" parameterType="Long">
+        delete from sys_test_tree where tree_id = #{treeId}
+    </delete>
+
+    <delete id="deleteSysTestTreeByIds" parameterType="String">
+        delete from sys_test_tree where tree_id in
+        <foreach item="treeId" collection="array" open="(" separator="," close=")">
+            #{treeId}
+        </foreach>
+    </delete>
+
+</mapper>

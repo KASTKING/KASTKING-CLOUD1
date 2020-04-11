@@ -1,0 +1,48 @@
+server:
+  port: 10053
+
+
+spring:
+  thymeleaf:
+    mode: HTML
+    encoding: utf-8
+    cache: false
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  profiles:
+    active: druid
+  servlet:
+    multipart:
+      max-file-size:  10MB
+      max-request-size:  20MB
+  devtools:
+    restart:
+      enabled: false
+  application:
+    name: Test-Server
+#    name: Test-Server
+# MyBatis
+mybatis:
+  typeAliasesPackage: com.kastking.**.domain
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  configLocation: classpath:mybatis/mybatis-config.xml
+
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eposeidon:eposeidon2019@localhost:8761/eureka/
+
+
+  # 打印sql
+#logging:
+logging:
+  level com.kastking.test.mapper.SysTestMapper: debug
+#  level: com.kastking.test.mapper :debug

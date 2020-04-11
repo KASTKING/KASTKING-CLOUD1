@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('人员产品详情')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-personProduct-edit">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">SKU：</label>
+            <div class="form-control-static" th:text="${personProduct.sku}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">售价：</label>
+            <div class="form-control-static" th:text="${personProduct.sellingPrice}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">是否预计：</label>
+            <div class="form-control-static" th:text="${personProduct.isExpected == '0' ? '否' : '是'}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Memo：</label>
+            <div class="form-control-static" th:text="${personProduct.memo}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">CreateDate：</label>
+            <div class="form-control-static" th:text="${personProduct.createDate}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">UpdateDate：</label>
+            <div class="form-control-static" th:text="${personProduct.updateDate}"></div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+</body>
+</html>

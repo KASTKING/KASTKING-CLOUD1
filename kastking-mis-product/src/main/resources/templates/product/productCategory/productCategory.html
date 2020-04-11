@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('产品类目列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <p>NO：</p>
+                            <input type="text" name="categoryNo"/>
+                        </li>
+                        <li>
+                            <p>Category：</p>
+                            <input type="text" name="category"/>
+                        </li>
+                        <li>
+                            <p>Abbv：</p>
+                            <input type="text" name="abbv"/>
+                        </li>
+                        <li>
+                            <p>Tag：</p>
+                            <input type="text" name="tag"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i
+                                    class="fa fa-search"></i>&nbsp;Search</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;Reset</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="product:productCategory:add">
+                <i class="fa fa-plus"></i> Add
+            </a>
+            <a class="btn btn-primary" onclick="$.operate.edit()" shiro:hasPermission="product:productCategory:edit">
+                <i class="fa fa-edit"></i> Edit
+            </a>
+            <a class="btn btn-info" id="expandAllBtn">
+                <i class="fa fa-exchange"></i> Expand / Collapse
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-tree-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var addFlag = [[${@permission.hasPermi('product:productCategory:add')}]];
+    var editFlag = [[${@permission.hasPermi('product:productCategory:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('product:productCategory:remove')}]];
+    var prefix = ctx + "product/productCategory";
+
+    $(function () {
+        var options = {
+            code: "categoryId",
+            parentCode: "fatherId",
+            expandColumn: "2",
+            uniqueId: "categoryId",
+            url: prefix + "/list",
+            createUrl: prefix + "/add/{id}",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove/{id}",
+            exportUrl: prefix + "/export",
+            modalName: "Product Category",
+            expandAll: false,
+            columns: [{
+                field: 'selectItem',
+                radio: true
+            },
+                // {
+                //     field : 'fatherId',
+                //     title : '父ID',
+                //     align: 'left'
+                // },
+                {
+                    field: 'categoryNo',
+                    title: 'NO',
+                    align: 'left'
+                },
+                {
+                    field: 'category',
+                    title: 'Category',
+                    align: 'left'
+                },
+                {
+                    field: 'abbv',
+                    title: 'abbv',
+                    align: 'left'
+                },
+                {
+                    field: 'tag',
+                    title: 'Tag',
+                    align: 'left'
+                },
+                {
+                    field: 'memo',
+                    title: 'Memo',
+                    align: 'left'
+                },
+                {
+                    title: 'Action',
+                    align: 'center',
+                    align: 'left',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.categoryId + '\')"><i class="fa fa-edit"></i>Add</a> ');
+                        actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="$.operate.add(\'' + row.categoryId + '\')"><i class="fa fa-plus"></i>Edit</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.categoryId + '\')"><i class="fa fa-remove"></i>Remove</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.treeTable.init(options);
+    });
+</script>
+</body>
+</html>

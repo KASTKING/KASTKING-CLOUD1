@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.platformChannel.mapper.PlatformChannelMapper">
+
+    <resultMap type="PlatformChannel" id="PlatformChannelResult">
+        <result property="platformChannelId" column="platform_channel_id"/>
+        <result property="fatherId" column="father_id"/>
+        <result property="ancestors" column="ancestors"/>
+        <result property="platformChannel" column="platform_channel"/>
+        <result property="marketId" column="market_id"/>
+        <result property="memo" column="memo"/>
+        <result property="parentName" column="parent_name"/>
+    </resultMap>
+
+    <sql id="selectPlatformChannelVo">
+        select platform_channel_id, father_id, ancestors, platform_channel, market_id, memo from mis_platform_channel
+    </sql>
+
+    <select id="selectSku" resultType="java.lang.Integer">
+        select 1 from mis_product_info
+        where is_adjust=1 and state=1 and sku=#{sku}
+    </select>
+
+    <select id="selectSalesmanId" resultType="java.lang.Integer">
+        select salesman_id from misv_platform_channel where
+        salesman=#{salesman} and channel=#{channel}
+    </select>
+
+    <select id="selectPlatformChannelList" parameterType="PlatformChannel" resultMap="PlatformChannelResult">
+        <include refid="selectPlatformChannelVo"/>
+        <where>
+            <if test="fatherId != null ">and father_id = #{fatherId}</if>
+            <if test="ancestors != null  and ancestors != ''">and ancestors = #{ancestors}</if>
+            <if test="platformChannel != null  and platformChannel != ''">and platform_channel = #{platformChannel}</if>
+            <if test="marketId != null ">and market_id = #{marketId}</if>
+            <if test="memo != null  and memo != ''">and memo = #{memo}</if>
+        </where>
+        order by father_id
+    </select>
+
+    <select id="selectPlatformChannelById" parameterType="Long" resultMap="PlatformChannelResult">
+        select t.platform_channel_id, t.father_id, t.ancestors, t.platform_channel, t.market_id, t.memo,
+        p.platform_channel as parent_name
+        from mis_platform_channel t
+        left join mis_platform_channel p on p.platform_channel_id = t.father_id
+        where t.platform_channel_id = #{platformChannelId}
+    </select>
+
+    <insert id="insertPlatformChannel" parameterType="PlatformChannel" useGeneratedKeys="true"
+            keyProperty="platformChannelId">
+        insert into mis_platform_channel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fatherId != null ">father_id,</if>
+            <if test="ancestors != null  and ancestors != ''">ancestors,</if>
+            <if test="platformChannel != null  and platformChannel != ''">platform_channel,</if>
+            <if test="marketId != null ">market_id,</if>
+            <if test="memo != null  and memo != ''">memo,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fatherId != null ">#{fatherId},</if>
+            <if test="ancestors != null  and ancestors != ''">#{ancestors},</if>
+            <if test="platformChannel != null  and platformChannel != ''">#{platformChannel},</if>
+            <if test="marketId != null ">#{marketId},</if>
+            <if test="memo != null  and memo != ''">#{memo},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePlatformChannel" parameterType="PlatformChannel">
+        update mis_platform_channel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fatherId != null ">father_id = #{fatherId},</if>
+            <if test="ancestors != null  and ancestors != ''">ancestors = #{ancestors},</if>
+            <if test="platformChannel != null  and platformChannel != ''">platform_channel = #{platformChannel},</if>
+            <if test="marketId != null ">market_id = #{marketId},</if>
+            <if test="memo != null  and memo != ''">memo = #{memo},</if>
+        </trim>
+        where platform_channel_id = #{platformChannelId}
+    </update>
+
+    <delete id="deletePlatformChannelById" parameterType="Long">
+        delete from mis_platform_channel where platform_channel_id = #{platformChannelId}
+    </delete>
+
+    <delete id="deletePlatformChannelByIds" parameterType="String">
+        delete from mis_platform_channel where platform_channel_id in
+        <foreach item="platformChannelId" collection="array" open="(" separator="," close=")">
+            #{platformChannelId}
+        </foreach>
+    </delete>
+
+</mapper>

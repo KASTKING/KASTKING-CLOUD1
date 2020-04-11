@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.warehouse.mapper.WarehouseAvailableMapper">
+
+    <resultMap type="WarehouseAvailable" id="WarehouseAvailableResult">
+        <result property="availableId" column="available_id"/>
+        <result property="period" column="period"/>
+        <result property="warehouse" column="warehouse"/>
+        <result property="forecastMonth" column="forecast_month"/>
+        <result property="sku" column="sku"/>
+        <result property="availableNum" column="available_num"/>
+        <result property="lastDaySales" column="last_day_sales"/>
+    </resultMap>
+
+    <sql id="selectWarehouseAvailableVo">
+        select available_id, period, warehouse, forecast_month, sku, available_num, last_day_sales from
+        mis_warehouse_available
+    </sql>
+
+
+    <select id="selectWarehouseAvailableList" parameterType="WarehouseAvailable" resultMap="WarehouseAvailableResult">
+        <include refid="selectWarehouseAvailableVo"/>
+        <where>
+            <if test="period != null ">and period = #{period}</if>
+            <if test="warehouse != null  and warehouse != ''">and warehouse = #{warehouse}</if>
+            <if test="forecastMonth != null ">and forecast_month = #{forecastMonth}</if>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+        </where>
+    </select>
+
+    <select id="selectWarehouseAvailableById" parameterType="Long" resultMap="WarehouseAvailableResult">
+        <include refid="selectWarehouseAvailableVo"/>
+        where available_id = #{availableId}
+    </select>
+
+    <insert id="insertWarehouseAvailable" parameterType="WarehouseAvailable" useGeneratedKeys="true"
+            keyProperty="availableId">
+        insert into mis_warehouse_available
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="period != null ">period,</if>
+            <if test="warehouse != null  and warehouse != ''">warehouse,</if>
+            <if test="forecastMonth != null ">forecast_month,</if>
+            <if test="sku != null  and sku != ''">sku,</if>
+            <if test="availableNum != null ">available_num,</if>
+            <if test="lastDaySales != null ">last_day_sales,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="period != null ">#{period},</if>
+            <if test="warehouse != null  and warehouse != ''">#{warehouse},</if>
+            <if test="forecastMonth != null ">#{forecastMonth},</if>
+            <if test="sku != null  and sku != ''">#{sku},</if>
+            <if test="availableNum != null ">#{availableNum},</if>
+            <if test="lastDaySales != null ">#{lastDaySales},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWarehouseAvailable" parameterType="WarehouseAvailable">
+        update mis_warehouse_available
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="period != null ">period = #{period},</if>
+            <if test="warehouse != null  and warehouse != ''">warehouse = #{warehouse},</if>
+            <if test="forecastMonth != null ">forecast_month = #{forecastMonth},</if>
+            <if test="sku != null  and sku != ''">sku = #{sku},</if>
+            <if test="availableNum != null ">available_num = #{availableNum},</if>
+            <if test="lastDaySales != null ">last_day_sales = #{lastDaySales},</if>
+        </trim>
+        where available_id = #{availableId}
+    </update>
+
+    <delete id="deleteWarehouseAvailableById" parameterType="Long">
+        delete from mis_warehouse_available where available_id = #{availableId}
+    </delete>
+
+    <delete id="deleteWarehouseAvailableByIds" parameterType="String">
+        delete from mis_warehouse_available where available_id in
+        <foreach item="availableId" collection="array" open="(" separator="," close=")">
+            #{availableId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('${functionName}详情')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-${className}-edit">
+        #foreach($column in $columns)
+            #if($column.columnName != $primaryKey.columnName)
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">${column.columnComment}：</label>
+                    <div class="form-control-static" th:text="${${className}.${column.javaField}}"></div>
+                </div>
+            #end
+        #end
+    </form>
+</div>
+<div th:include="include::footer"></div>
+</body>
+</html>

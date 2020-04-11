@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.productCategory.mapper.ProductCategoryMapper">
+
+    <resultMap type="ProductCategory" id="ProductCategoryResult">
+        <result property="categoryId" column="category_id"/>
+        <result property="fatherId" column="father_id"/>
+        <result property="categoryNo" column="category_no"/>
+        <result property="category" column="category"/>
+        <result property="abbv" column="abbv"/>
+        <result property="tag" column="tag"/>
+        <result property="memo" column="memo"/>
+        <result property="parentName" column="parent_name"/>
+    </resultMap>
+
+    <select id="selectIsProductCategory" resultType="java.lang.Integer">
+        select category_id
+        from mis_product_category
+        where father_id = #{fatherId}
+    </select>
+
+    <sql id="selectProductCategoryVo">
+        select category_id, father_id, category_no, category, abbv, tag, memo from mis_product_category
+    </sql>
+
+    <select id="selectProductCategoryList" parameterType="ProductCategory" resultMap="ProductCategoryResult">
+        <include refid="selectProductCategoryVo"/>
+        <where>
+            <if test="fatherId != null ">and father_id = #{fatherId}</if>
+            <if test="categoryNo != null  and categoryNo != ''">and category_no = #{categoryNo}</if>
+            <if test="category != null  and category != ''">and category = #{category}</if>
+            <if test="abbv != null  and abbv != ''">and abbv = #{abbv}</if>
+            <if test="tag != null  and tag != ''">and tag = #{tag}</if>
+            <if test="memo != null  and memo != ''">and memo = #{memo}</if>
+        </where>
+        order by father_id
+    </select>
+
+    <select id="selectProductCategoryById" parameterType="Long" resultMap="ProductCategoryResult">
+        select t.category_id, t.father_id, t.category_no, t.category, t.abbv, t.tag, t.memo, p.category as parent_name
+        from mis_product_category t
+        left join mis_product_category p on p.category_id = t.father_id
+        where t.category_id = #{categoryId}
+    </select>
+
+    <insert id="insertProductCategory" parameterType="ProductCategory" useGeneratedKeys="true" keyProperty="categoryId">
+        insert into mis_product_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fatherId != null ">father_id,</if>
+            <if test="categoryNo != null  and categoryNo != ''">category_no,</if>
+            <if test="category != null  and category != ''">category,</if>
+            <if test="abbv != null  and abbv != ''">abbv,</if>
+            <if test="tag != null  and tag != ''">tag,</if>
+            <if test="memo != null  and memo != ''">memo,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fatherId != null ">#{fatherId},</if>
+            <if test="categoryNo != null  and categoryNo != ''">#{categoryNo},</if>
+            <if test="category != null  and category != ''">#{category},</if>
+            <if test="abbv != null  and abbv != ''">#{abbv},</if>
+            <if test="tag != null  and tag != ''">#{tag},</if>
+            <if test="memo != null  and memo != ''">#{memo},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductCategory" parameterType="ProductCategory">
+        update mis_product_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fatherId != null ">father_id = #{fatherId},</if>
+            <if test="categoryNo != null  and categoryNo != ''">category_no = #{categoryNo},</if>
+            <if test="category != null  and category != ''">category = #{category},</if>
+            <if test="abbv != null  and abbv != ''">abbv = #{abbv},</if>
+            <if test="tag != null  and tag != ''">tag = #{tag},</if>
+            <if test="memo != null  and memo != ''">memo = #{memo},</if>
+        </trim>
+        where category_id = #{categoryId}
+    </update>
+
+    <delete id="deleteProductCategoryById" parameterType="Long">
+        delete from mis_product_category where category_id = #{categoryId}
+    </delete>
+
+    <delete id="deleteProductCategoryByIds" parameterType="String">
+        delete from mis_product_category where category_id in
+        <foreach item="categoryId" collection="array" open="(" separator="," close=")">
+            #{categoryId}
+        </foreach>
+    </delete>
+
+</mapper>

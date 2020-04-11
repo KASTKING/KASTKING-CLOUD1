@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('平台站点详情')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-platformChannel-edit">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ID：</label>
+            <div class="form-control-static" th:text="${platformChannel.platformChannelId}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">父ID：</label>
+            <div class="form-control-static" th:text="${platformChannel.fatherId}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">祖级列表：</label>
+            <div class="form-control-static" th:text="${platformChannel.ancestors}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">平台站点：</label>
+            <div class="form-control-static" th:text="${platformChannel.platformChannel}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">市场ID：</label>
+            <div class="form-control-static" th:text="${platformChannel.marketId}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="form-control-static" th:text="${platformChannel.memo}"></div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+</body>
+</html>

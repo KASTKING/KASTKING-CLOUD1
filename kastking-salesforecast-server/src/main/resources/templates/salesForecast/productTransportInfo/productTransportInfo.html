@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('商品运输属性列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <p>SKU：</p>
+                            <input type="text" name="sku"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()"
+               shiro:hasPermission="salesForecast:productTransportInfo:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
+               shiro:hasPermission="salesForecast:productTransportInfo:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="salesForecast:productTransportInfo:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-info" onclick="$.table.importExcel()"
+               shiro:hasPermission="salesForecast:productTransportInfo:import">
+                <i class="fa fa-upload"></i> 导入
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()"
+               shiro:hasPermission="salesForecast:productTransportInfo:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var datas1 = [[${@dict.getType('mis_transport_type')}]];
+    var datas2 = [[${@dict.getType('mis_market_type')}]];
+    var editFlag = [[${@permission.hasPermi('salesForecast:productTransportInfo:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('salesForecast:productTransportInfo:remove')}]];
+    var detailFlag = [[${@permission.hasPermi('salesForecast:productTransportInfo:detail')}]];
+    var prefix = ctx + "salesForecast/productTransportInfo";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            detailUrl: prefix + "/detail/{id}",
+            importUrl: prefix + "/importData",
+            importTemplateUrl: prefix + "/importTemplate",
+            exportUrl: prefix + "/export",
+            modalName: "商品运输属性",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'transportInfoId',
+                    title: '商品运输属性ID',
+                    visible: false
+                },
+                {
+                    field: 'sku',
+                    title: 'SKU'
+                },
+                {
+                    field: 'marketId',
+                    title: '市场',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(datas2, value);
+                    }
+                },
+                {
+                    field: 'transportId',
+                    title: '运输方式',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(datas1, value);
+                    }
+                },//transport_month,presells_month,produce_month,moq,state
+                {
+                    field: 'transportMonth',
+                    title: '运输周期'
+                },
+                {
+                    field: 'presellsMonth',
+                    title: '预计月数'
+                },
+                {
+                    field: 'produceMonth',
+                    title: '生产周期'
+                },
+                {
+                    field: 'moq',
+                    title: 'MOQ'
+                },
+                {
+                    field: 'state',
+                    title: 'State'
+                },
+                {
+                    field: 'memo',
+                    title: 'Memo'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.transportInfoId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.transportInfoId + '\')"><i class="fa fa-remove"></i>删除</a> ');
+                        // actions.push('<a class="btn btn-warning btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.transportInfoId + '\')"><i class="fa fa-remove"></i>详情</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+<!-- 导入区域 -->
+<script id="importTpl" type="text/template">
+    <form enctype="multipart/form-data" class="mt20 mb10">
+        <div class="col-xs-offset-1">
+            <input type="file" id="file" name="file"/>
+            <div class="mt10 pt5">
+                <input type="checkbox" id="updateSupport" disabled="disabled" name="updateSupport"
+                       title="如果商品运输属性数据已经存在，更新这条数据。"> 是否更新已经存在的商品运输属性数据
+                &nbsp; <a onclick="$.table.importTemplate()" class="btn btn-default btn-xs"><i
+                    class="fa fa-file-excel-o"></i> 下载模板</a>
+            </div>
+            <font color="red" class="pull-left mt10">
+                提示：仅允许导入“xls”或“xlsx”格式文件！
+            </font>
+        </div>
+    </form>
+</script>
+</html>

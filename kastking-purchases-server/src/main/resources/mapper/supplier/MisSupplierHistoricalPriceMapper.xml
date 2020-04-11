@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.historicalPrice.mapper.MisSupplierHistoricalPriceMapper">
+
+    <resultMap type="MisSupplierHistoricalPrice" id="MisSupplierHistoricalPriceResult">
+        <result property="priceId" column="price_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="currentTime" column="current_times"/>
+        <result property="sku" column="sku"/>
+        <result property="currency" column="currency"/>
+        <result property="lastTax" column="last_tax"/>
+        <result property="lastTime" column="last_time"/>
+        <result property="lastNoPrice" column="last_no_price"/>
+        <result property="lastPrice" column="last_price"/>
+        <result property="taxPoint" column="tax_point"/>
+        <result property="currentNoPrice" column="current_no_price"/>
+        <result property="currentPrice" column="current_price"/>
+        <result property="differenceNoPrice" column="difference_no_price"/>
+        <result property="differencePrice" column="difference_price"/>
+    </resultMap>
+
+    <sql id="selectMisSupplierHistoricalPriceVo">
+        select price_id, a.product_id, current_times, b.sku, a.currency, last_time, last_no_price,
+        last_price, current_no_price, current_price,last_tax,a.tax_point,
+        last_no_price-current_no_price as difference_no_price,
+        last_price-current_price as difference_price
+        from mis_supplier_historical_price a left join mis_supplier_product b on a.product_id=b.product_id
+    </sql>
+
+    <select id="selectMisSupplierHistoricalPriceList" parameterType="MisSupplierHistoricalPrice"
+            resultMap="MisSupplierHistoricalPriceResult">
+        <include refid="selectMisSupplierHistoricalPriceVo"/>
+        <where>
+            <if test="productId != null ">and a.product_id = #{productId}</if>
+            <if test="currentTime != null ">and current_times &gt;= #{currentTime}</if>
+            <if test="currentTimeEnd != null ">and current_times &lt;= #{currentTimeEnd}</if>
+            <if test="sku != null  and sku != ''">and b.sku like concat('%', #{sku}, '%')</if>
+            <if test="currency != null  and currency != ''">and a.currency = #{currency}</if>
+            <if test="lastTime != null ">and last_time = #{lastTime}</if>
+            <if test="lastNoPrice != null ">and last_no_price = #{lastNoPrice}</if>
+            <if test="lastPrice != null ">and last_price = #{lastPrice}</if>
+            <if test="currentNoPrice != null ">and current_no_price = #{currentNoPrice}</if>
+            <if test="currentPrice != null ">and current_price = #{currentPrice}</if>
+        </where>
+    </select>
+
+    <select id="selectMisSupplierHistoricalPriceById" parameterType="Long" resultMap="MisSupplierHistoricalPriceResult">
+        <include refid="selectMisSupplierHistoricalPriceVo"/>
+        where price_id = #{priceId}
+    </select>
+
+    <insert id="insertMisSupplierHistoricalPrice" parameterType="MisSupplierHistoricalPrice" useGeneratedKeys="true"
+            keyProperty="priceId">
+        insert into mis_supplier_historical_price
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null ">product_id,</if>
+            <if test="currentTime != null ">current_times,</if>
+            <if test="currency != null  and currency != ''">currency,</if>
+            <if test="lastTime != null ">last_time,</if>
+            <if test="lastTax != null ">last_tax,</if>
+            <if test="lastNoPrice != null ">last_no_price,</if>
+            <if test="lastPrice != null ">last_price,</if>
+            <if test="taxPoint != null ">tax_point,</if>
+            <if test="currentNoPrice != null ">current_no_price,</if>
+            <if test="currentPrice != null ">current_price,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null ">#{productId},</if>
+            <if test="currentTime != null ">#{currentTime},</if>
+            <if test="currency != null  and currency != ''">#{currency},</if>
+            <if test="lastTime != null ">#{lastTime},</if>
+            <if test="lastTax != null ">#{lastTax},</if>
+            <if test="lastNoPrice != null ">#{lastNoPrice},</if>
+            <if test="lastPrice != null ">#{lastPrice},</if>
+            <if test="taxPoint != null ">#{taxPoint},</if>
+            <if test="currentNoPrice != null ">#{currentNoPrice},</if>
+            <if test="currentPrice != null ">#{currentPrice},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMisSupplierHistoricalPrice" parameterType="MisSupplierHistoricalPrice">
+        update mis_supplier_historical_price
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null ">product_id = #{productId},</if>
+            <if test="currentTime != null ">current_times = #{currentTime},</if>
+            <if test="currency != null  and currency != ''">currency = #{currency},</if>
+            <if test="lastTime != null ">last_time = #{lastTime},</if>
+            <if test="lastTax != null ">last_tax = #{lastTax},</if>
+            <if test="lastNoPrice != null ">last_no_price = #{lastNoPrice},</if>
+            <if test="lastPrice != null ">last_price = #{lastPrice},</if>
+            <if test="taxPoint != null ">tax_point = #{taxPoint},</if>
+            <if test="currentNoPrice != null ">current_no_price = #{currentNoPrice},</if>
+            <if test="currentPrice != null ">current_price = #{currentPrice},</if>
+        </trim>
+        where price_id = #{priceId}
+    </update>
+
+    <delete id="deleteMisSupplierHistoricalPriceById" parameterType="Long">
+        delete from mis_supplier_historical_price where price_id = #{priceId}
+    </delete>
+
+    <delete id="deleteMisSupplierHistoricalPriceByIds" parameterType="String">
+        delete from mis_supplier_historical_price where price_id in
+        <foreach item="priceId" collection="array" open="(" separator="," close=")">
+            #{priceId}
+        </foreach>
+    </delete>
+
+</mapper>

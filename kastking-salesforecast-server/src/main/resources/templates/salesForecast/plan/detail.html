@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('出货计划详情')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-shippingPlan-edit">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ID：</label>
+            <div class="form-control-static" th:text="${shippingPlan.shippingPlanId}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">期数：</label>
+            <div class="form-control-static" th:text="${shippingPlan.period}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">仓库：</label>
+            <div class="form-control-static" th:text="${shippingPlan.warehouse}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">SKU：</label>
+            <div class="form-control-static" th:text="${shippingPlan.sku}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">出货数：</label>
+            <div class="form-control-static" th:text="${shippingPlan.shipNum}"></div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+</body>
+</html>

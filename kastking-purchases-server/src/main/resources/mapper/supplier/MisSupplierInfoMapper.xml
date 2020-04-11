@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.supplierInfo.mapper.MisSupplierInfoMapper">
+
+    <resultMap type="MisSupplierInfo" id="MisSupplierInfoResult">
+        <result property="supplierId" column="supplier_id"/>
+        <result property="fatherId" column="father_id"/>
+        <result property="buyer" column="buyer"/>
+        <result property="productProperties" column="product_properties"/>
+        <result property="paymentAttributes" column="payment_attributes"/>
+        <result property="fullSupplierName" column="full_supplier_name"/>
+        <result property="supplierCode" column="supplier_code"/>
+        <result property="paymentMethod" column="payment_method"/>
+        <result property="shippingPayment" column="shipping_payment"/>
+        <result property="contact1" column="contact1"/>
+        <result property="qq1" column="qq1"/>
+        <result property="mobilePhoneNumber1" column="mobile_phone_number1"/>
+        <result property="contact2" column="contact2"/>
+        <result property="qq2" column="qq2"/>
+        <result property="mobilePhoneNumber2" column="mobile_phone_number2"/>
+        <result property="contact3" column="contact3"/>
+        <result property="qq3" column="qq3"/>
+        <result property="mobilePhoneNumber3" column="mobile_phone_number3"/>
+        <result property="supplierAddress" column="supplier_address"/>
+        <result property="payeePrivate" column="payee_private"/>
+        <result property="beneficiaryBankPrivate" column="beneficiary_bank_private"/>
+        <result property="bankAccountPrivate" column="bank_account_private"/>
+        <result property="payeePublic" column="payee_public"/>
+        <result property="beneficiaryBankPublic" column="beneficiary_bank_public"/>
+        <result property="bankAccountPublic" column="bank_account_public"/>
+        <result property="email" column="email"/>
+        <result property="remark" column="remark"/>
+        <result property="parentName" column="parent_name"/>
+    </resultMap>
+
+    <sql id="selectMisSupplierInfoVo">
+        select supplier_id, father_id, buyer, product_properties, payment_attributes, full_supplier_name, supplier_code,
+        payment_method, shipping_payment, contact1, qq1, mobile_phone_number1, contact2, qq2, mobile_phone_number2,
+        contact3, qq3, mobile_phone_number3, supplier_address, payee_private, beneficiary_bank_private,
+        bank_account_private, payee_public, beneficiary_bank_public, bank_account_public, email, remark from
+        mis_supplier_info
+    </sql>
+
+    <select id="selectMisSupplierInfoList" parameterType="MisSupplierInfo" resultMap="MisSupplierInfoResult">
+        <include refid="selectMisSupplierInfoVo"/>
+        <where>
+            <if test="buyer != null  and buyer != ''">and buyer = #{buyer}</if>
+            <if test="supplierId != null ">and supplier_id = #{supplierId}</if>
+            <if test="fullSupplierName != null  and fullSupplierName != ''">and full_supplier_name like concat('%',
+                #{fullSupplierName}, '%')
+            </if>
+            <if test="supplierCode != null  and supplierCode != ''">and supplier_code = #{supplierCode}</if>
+            and logo=1
+        </where>
+        order by father_id
+    </select>
+
+    <select id="selectMisSupplierInfoById" parameterType="Long" resultMap="MisSupplierInfoResult">
+        select t.supplier_id, t.father_id, t.buyer, t.product_properties, t.payment_attributes, t.full_supplier_name,
+        t.supplier_code, t.payment_method, t.shipping_payment, t.contact1, t.qq1, t.mobile_phone_number1, t.contact2,
+        t.qq2, t.mobile_phone_number2, t.contact3, t.qq3, t.mobile_phone_number3, t.supplier_address, t.payee_private,
+        t.beneficiary_bank_private, t.bank_account_private, t.payee_public, t.beneficiary_bank_public,
+        t.bank_account_public, t.email, t.remark, p.buyer as parent_name
+        from mis_supplier_info t
+        left join mis_supplier_info p on p.supplier_id = t.father_id
+        where t.supplier_id = #{supplierId} and t.logo=1
+    </select>
+
+    <insert id="insertMisSupplierInfo" parameterType="MisSupplierInfo" useGeneratedKeys="true" keyProperty="supplierId">
+        insert into mis_supplier_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supplierId != null ">supplier_id,</if>
+            <if test="fatherId != null ">father_id,</if>
+            <if test="buyer != null  and buyer != ''">buyer,</if>
+            <if test="productProperties != null  and productProperties != ''">product_properties,</if>
+            <if test="paymentAttributes != null  and paymentAttributes != ''">payment_attributes,</if>
+            <if test="fullSupplierName != null  and fullSupplierName != ''">full_supplier_name,</if>
+            <if test="supplierCode != null  and supplierCode != ''">supplier_code,</if>
+            <if test="paymentMethod != null  and paymentMethod != ''">payment_method,</if>
+            <if test="shippingPayment != null  and shippingPayment != ''">shipping_payment,</if>
+            <if test="contact1 != null  and contact1 != ''">contact1,</if>
+            <if test="qq1 != null  and qq1 != ''">qq1,</if>
+            <if test="mobilePhoneNumber1 != null  and mobilePhoneNumber1 != ''">mobile_phone_number1,</if>
+            <if test="contact2 != null  and contact2 != ''">contact2,</if>
+            <if test="qq2 != null  and qq2 != ''">qq2,</if>
+            <if test="mobilePhoneNumber2 != null  and mobilePhoneNumber2 != ''">mobile_phone_number2,</if>
+            <if test="contact3 != null  and contact3 != ''">contact3,</if>
+            <if test="qq3 != null  and qq3 != ''">qq3,</if>
+            <if test="mobilePhoneNumber3 != null  and mobilePhoneNumber3 != ''">mobile_phone_number3,</if>
+            <if test="supplierAddress != null  and supplierAddress != ''">supplier_address,</if>
+            <if test="payeePrivate != null  and payeePrivate != ''">payee_private,</if>
+            <if test="beneficiaryBankPrivate != null  and beneficiaryBankPrivate != ''">beneficiary_bank_private,</if>
+            <if test="bankAccountPrivate != null  and bankAccountPrivate != ''">bank_account_private,</if>
+            <if test="payeePublic != null  and payeePublic != ''">payee_public,</if>
+            <if test="beneficiaryBankPublic != null  and beneficiaryBankPublic != ''">beneficiary_bank_public,</if>
+            <if test="bankAccountPublic != null  and bankAccountPublic != ''">bank_account_public,</if>
+            <if test="email != null  and email != ''">email,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supplierId != null ">#{supplierId},</if>
+            <if test="fatherId != null ">#{fatherId},</if>
+            <if test="buyer != null  and buyer != ''">#{buyer},</if>
+            <if test="productProperties != null  and productProperties != ''">#{productProperties},</if>
+            <if test="paymentAttributes != null  and paymentAttributes != ''">#{paymentAttributes},</if>
+            <if test="fullSupplierName != null  and fullSupplierName != ''">#{fullSupplierName},</if>
+            <if test="supplierCode != null  and supplierCode != ''">#{supplierCode},</if>
+            <if test="paymentMethod != null  and paymentMethod != ''">#{paymentMethod},</if>
+            <if test="shippingPayment != null  and shippingPayment != ''">#{shippingPayment},</if>
+            <if test="contact1 != null  and contact1 != ''">#{contact1},</if>
+            <if test="qq1 != null  and qq1 != ''">#{qq1},</if>
+            <if test="mobilePhoneNumber1 != null  and mobilePhoneNumber1 != ''">#{mobilePhoneNumber1},</if>
+            <if test="contact2 != null  and contact2 != ''">#{contact2},</if>
+            <if test="qq2 != null  and qq2 != ''">#{qq2},</if>
+            <if test="mobilePhoneNumber2 != null  and mobilePhoneNumber2 != ''">#{mobilePhoneNumber2},</if>
+            <if test="contact3 != null  and contact3 != ''">#{contact3},</if>
+            <if test="qq3 != null  and qq3 != ''">#{qq3},</if>
+            <if test="mobilePhoneNumber3 != null  and mobilePhoneNumber3 != ''">#{mobilePhoneNumber3},</if>
+            <if test="supplierAddress != null  and supplierAddress != ''">#{supplierAddress},</if>
+            <if test="payeePrivate != null  and payeePrivate != ''">#{payeePrivate},</if>
+            <if test="beneficiaryBankPrivate != null  and beneficiaryBankPrivate != ''">#{beneficiaryBankPrivate},</if>
+            <if test="bankAccountPrivate != null  and bankAccountPrivate != ''">#{bankAccountPrivate},</if>
+            <if test="payeePublic != null  and payeePublic != ''">#{payeePublic},</if>
+            <if test="beneficiaryBankPublic != null  and beneficiaryBankPublic != ''">#{beneficiaryBankPublic},</if>
+            <if test="bankAccountPublic != null  and bankAccountPublic != ''">#{bankAccountPublic},</if>
+            <if test="email != null  and email != ''">#{email},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMisSupplierInfo" parameterType="MisSupplierInfo">
+        update mis_supplier_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fatherId != null ">father_id = #{fatherId},</if>
+            <if test="buyer != null  and buyer != ''">buyer = #{buyer},</if>
+            <if test="productProperties != null  and productProperties != ''">product_properties =
+                #{productProperties},
+            </if>
+            <if test="paymentAttributes != null  and paymentAttributes != ''">payment_attributes =
+                #{paymentAttributes},
+            </if>
+            <if test="fullSupplierName != null  and fullSupplierName != ''">full_supplier_name = #{fullSupplierName},
+            </if>
+            <if test="supplierCode != null  and supplierCode != ''">supplier_code = #{supplierCode},</if>
+            <if test="paymentMethod != null  and paymentMethod != ''">payment_method = #{paymentMethod},</if>
+            <if test="shippingPayment != null  and shippingPayment != ''">shipping_payment = #{shippingPayment},</if>
+            <if test="contact1 != null  and contact1 != ''">contact1 = #{contact1},</if>
+            <if test="qq1 != null  and qq1 != ''">qq1 = #{qq1},</if>
+            <if test="mobilePhoneNumber1 != null  and mobilePhoneNumber1 != ''">mobile_phone_number1 =
+                #{mobilePhoneNumber1},
+            </if>
+            <if test="contact2 != null  and contact2 != ''">contact2 = #{contact2},</if>
+            <if test="qq2 != null  and qq2 != ''">qq2 = #{qq2},</if>
+            <if test="mobilePhoneNumber2 != null  and mobilePhoneNumber2 != ''">mobile_phone_number2 =
+                #{mobilePhoneNumber2},
+            </if>
+            <if test="contact3 != null  and contact3 != ''">contact3 = #{contact3},</if>
+            <if test="qq3 != null  and qq3 != ''">qq3 = #{qq3},</if>
+            <if test="mobilePhoneNumber3 != null  and mobilePhoneNumber3 != ''">mobile_phone_number3 =
+                #{mobilePhoneNumber3},
+            </if>
+            <if test="supplierAddress != null  and supplierAddress != ''">supplier_address = #{supplierAddress},</if>
+            <if test="payeePrivate != null  and payeePrivate != ''">payee_private = #{payeePrivate},</if>
+            <if test="beneficiaryBankPrivate != null  and beneficiaryBankPrivate != ''">beneficiary_bank_private =
+                #{beneficiaryBankPrivate},
+            </if>
+            <if test="bankAccountPrivate != null  and bankAccountPrivate != ''">bank_account_private =
+                #{bankAccountPrivate},
+            </if>
+            <if test="payeePublic != null  and payeePublic != ''">payee_public = #{payeePublic},</if>
+            <if test="beneficiaryBankPublic != null  and beneficiaryBankPublic != ''">beneficiary_bank_public =
+                #{beneficiaryBankPublic},
+            </if>
+            <if test="bankAccountPublic != null  and bankAccountPublic != ''">bank_account_public =
+                #{bankAccountPublic},
+            </if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where supplier_id = #{supplierId}
+    </update>
+
+    <update id="deleteMisSupplierInfoById" parameterType="Long">
+        update mis_supplier_info set logo=0 where supplier_id = #{supplierId}
+    </update>
+
+    <update id="deleteMisSupplierInfoByIds" parameterType="String">
+        update mis_supplier_info set logo=0 where supplier_id in
+        <foreach item="supplierId" collection="array" open="(" separator="," close=")">
+            #{supplierId}
+        </foreach>
+    </update>
+
+    <select id="verificationBuyer" resultType="Long" parameterType="MisSupplierInfo">
+        select supplier_id from mis_supplier_info
+        <where>
+            buyer=#{buyer} and logo=1
+            <if test="supplierId!=null">
+                and supplier_id !=#{supplierId}
+            </if>
+        </where>
+        LIMIT 0,1
+    </select>
+</mapper>

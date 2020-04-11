@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改产品信息')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-productInfo-edit" th:object="${productInfo}">
+        <input name="productId" th:field="*{productId}" type="hidden">
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">Product Category：</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <input id="treeId" name="fatherId" type="hidden" th:field="*{seriesnameId}"/>
+                    <input class="form-control" type="text" onclick="selectProductCategoryTree()" id="treeName"
+                           readonly="true" th:field="*{seriesnameId}" required>
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">SKU：</label>
+            <div class="col-sm-8">
+                <input name="sku" th:field="*{sku}" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Number：</label>
+            <div class="col-sm-8">
+                <input name="number" th:field="*{number}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Memo：</label>
+            <div class="col-sm-8">
+                <input name="memo" th:field="*{memo}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">State：</label>
+            <div class="col-sm-8">
+                <input name="state" th:field="*{state}" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Designer：</label>
+            <div class="col-sm-8">
+                <input name="designer" th:field="*{designer}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Changes：</label>
+            <div class="col-sm-8">
+                <input name="changes" th:field="*{changes}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">NameRule：</label>
+            <div class="col-sm-8">
+                <textarea name="nameRule" class="form-control">[[*{nameRule}]]</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Country：</label>
+            <div class="col-sm-8">
+                <input name="country" th:field="*{country}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">DiameterMM：</label>
+            <div class="col-sm-8">
+                <input name="diameterMm" th:field="*{diameterMm}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">DiameterInch：</label>
+            <div class="col-sm-8">
+                <input name="diameterInch" th:field="*{diameterInch}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ReelSize：</label>
+            <div class="col-sm-8">
+                <input name="reelSize" th:field="*{reelSize}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ReelWeight：</label>
+            <div class="col-sm-8">
+                <input name="reelWeight" th:field="*{reelWeight}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">MaxDrag：</label>
+            <div class="col-sm-8">
+                <input name="maxDrag" th:field="*{maxDrag}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">GearRatio：</label>
+            <div class="col-sm-8">
+                <input name="gearRatio" th:field="*{gearRatio}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">BallBearing：</label>
+            <div class="col-sm-8">
+                <input name="ballBearing" th:field="*{ballBearing}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">IPT：</label>
+            <div class="col-sm-8">
+                <input name="ipt" th:field="*{ipt}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">CPT：</label>
+            <div class="col-sm-8">
+                <input name="cpt" th:field="*{cpt}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineCapacityLB：</label>
+            <div class="col-sm-8">
+                <input name="lineCapacityLb" th:field="*{lineCapacityLb}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineCapacityMM：</label>
+            <div class="col-sm-8">
+                <input name="lineCapacityMm" th:field="*{lineCapacityMm}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">RodType：</label>
+            <div class="col-sm-8">
+                <input name="rodType" th:field="*{rodType}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">RodWeight：</label>
+            <div class="col-sm-8">
+                <input name="rodWeight" th:field="*{rodWeight}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">RodLength：</label>
+            <div class="col-sm-8">
+                <input name="rodLength" th:field="*{rodLength}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Action：</label>
+            <div class="col-sm-8">
+                <input name="action" th:field="*{action}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Power：</label>
+            <div class="col-sm-8">
+                <input name="power" th:field="*{power}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineWt：</label>
+            <div class="col-sm-8">
+                <input name="lineWt" th:field="*{lineWt}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LureWt：</label>
+            <div class="col-sm-8">
+                <input name="lureWt" th:field="*{lureWt}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">NOofGuides：</label>
+            <div class="col-sm-8">
+                <input name="noOfGuides" th:field="*{noOfGuides}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Pieces：</label>
+            <div class="col-sm-8">
+                <input name="pieces" th:field="*{pieces}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ToolLength：</label>
+            <div class="col-sm-8">
+                <input name="toolLength" th:field="*{toolLength}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Material：</label>
+            <div class="col-sm-8">
+                <input name="material" th:field="*{material}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Color：</label>
+            <div class="col-sm-8">
+                <input name="color" th:field="*{color}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Style：</label>
+            <div class="col-sm-8">
+                <input name="style" th:field="*{style}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Type：</label>
+            <div class="col-sm-8">
+                <input name="type" th:field="*{type}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Size：</label>
+            <div class="col-sm-8">
+                <input name="size" th:field="*{size}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Notes：</label>
+            <div class="col-sm-8">
+                <input name="notes" th:field="*{notes}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note1：</label>
+            <div class="col-sm-8">
+                <input name="note1" th:field="*{note1}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note2：</label>
+            <div class="col-sm-8">
+                <input name="note2" th:field="*{note2}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note3：</label>
+            <div class="col-sm-8">
+                <input name="note3" th:field="*{note3}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note4：</label>
+            <div class="col-sm-8">
+                <input name="note4" th:field="*{note4}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note5：</label>
+            <div class="col-sm-8">
+                <input name="note5" th:field="*{note5}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note6：</label>
+            <div class="col-sm-8">
+                <input name="note6" th:field="*{note6}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LenzColor：</label>
+            <div class="col-sm-8">
+                <input name="lenzColor" th:field="*{lenzColor}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">CoatingColor：</label>
+            <div class="col-sm-8">
+                <input name="coatingColor" th:field="*{coatingColor}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LenzMaterial：</label>
+            <div class="col-sm-8">
+                <input name="lenzMaterial" th:field="*{lenzMaterial}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">FrameColor：</label>
+            <div class="col-sm-8">
+                <input name="frameColor" th:field="*{frameColor}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">FrameMateiral：</label>
+            <div class="col-sm-8">
+                <input name="frameMateiral" th:field="*{frameMateiral}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Picture：</label>
+            <div class="col-sm-8">
+                <input name="picture" th:field="*{picture}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineWeight：</label>
+            <div class="col-sm-8">
+                <input name="lineWeight" th:field="*{lineWeight}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineLength：</label>
+            <div class="col-sm-8">
+                <input name="lineLength" th:field="*{lineLength}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">TestLB：</label>
+            <div class="col-sm-8">
+                <input name="testLb" th:field="*{testLb}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineType：</label>
+            <div class="col-sm-8">
+                <input name="lineType" th:field="*{lineType}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Strands：</label>
+            <div class="col-sm-8">
+                <input name="strands" th:field="*{strands}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">TestStrength：</label>
+            <div class="col-sm-8">
+                <input name="testStrength" th:field="*{testStrength}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">TTSKU：</label>
+            <div class="col-sm-8">
+                <input name="ttsku" th:field="*{ttsku}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Tag：</label>
+            <div class="col-sm-8">
+                <input name="tag" th:field="*{tag}" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<script type="text/javascript">
+    var prefix = ctx + "product/productInfo";
+    $("#form-productInfo-edit").validate({
+        focusCleanup: true
+    });
+
+    /*产品类目-新增-选择父部门树*/
+    function selectProductCategoryTree() {
+        var options = {
+            title: '产品类目选择',
+            width: "380",
+            url: ctx + "product/productCategory" + "/selectProductCategoryTree/" + $("#treeId").val(),
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmit(index, layero) {
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+    }
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-productInfo-edit').serialize());
+        }
+    }
+</script>
+</body>
+</html>

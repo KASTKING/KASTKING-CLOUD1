@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.productLevel.mapper.ProductLevelMapper">
+
+    <resultMap type="ProductLevel" id="ProductLevelResult">
+        <result property="productLevelId" column="product_level_id"/>
+        <result property="channel" column="channel"/>
+        <result property="sku" column="sku"/>
+        <result property="productLevel" column="product_level"/>
+        <result property="salesman" column="salesman"/>
+    </resultMap>
+
+    <sql id="selectProductLevelVo">
+        select product_level_id, channel, sku, product_level, salesman from mis_product_level
+    </sql>
+
+    <select id="selectProductLevelList" parameterType="ProductLevel" resultMap="ProductLevelResult">
+        <include refid="selectProductLevelVo"/>
+        <where>
+            <if test="channel != null  and channel != ''">and channel = #{channel}</if>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+            <if test="productLevel != null  and productLevel != ''">and product_level = #{productLevel}</if>
+            <if test="salesman != null  and salesman != ''">and salesman = #{salesman}</if>
+        </where>
+    </select>
+
+    <select id="selectProductLevelById" parameterType="Long" resultMap="ProductLevelResult">
+        <include refid="selectProductLevelVo"/>
+        where product_level_id = #{productLevelId}
+    </select>
+
+    <insert id="insertProductLevel" parameterType="ProductLevel" useGeneratedKeys="true" keyProperty="productLevelId">
+        insert into mis_product_level
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="channel != null  and channel != ''">channel,</if>
+            <if test="sku != null  and sku != ''">sku,</if>
+            <if test="productLevel != null  and productLevel != ''">product_level,</if>
+            <if test="salesman != null  and salesman != ''">salesman,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="channel != null  and channel != ''">#{channel},</if>
+            <if test="sku != null  and sku != ''">#{sku},</if>
+            <if test="productLevel != null  and productLevel != ''">#{productLevel},</if>
+            <if test="salesman != null  and salesman != ''">#{salesman},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductLevel" parameterType="ProductLevel">
+        update mis_product_level
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="channel != null  and channel != ''">channel = #{channel},</if>
+            <if test="sku != null  and sku != ''">sku = #{sku},</if>
+            <if test="productLevel != null  and productLevel != ''">product_level = #{productLevel},</if>
+            <if test="salesman != null  and salesman != ''">salesman = #{salesman},</if>
+        </trim>
+        where product_level_id = #{productLevelId}
+    </update>
+
+    <delete id="deleteProductLevelById" parameterType="Long">
+        delete from mis_product_level where product_level_id = #{productLevelId}
+    </delete>
+
+    <delete id="deleteProductLevelByIds" parameterType="String">
+        delete from mis_product_level where product_level_id in
+        <foreach item="productLevelId" collection="array" open="(" separator="," close=")">
+            #{productLevelId}
+        </foreach>
+    </delete>
+
+</mapper>

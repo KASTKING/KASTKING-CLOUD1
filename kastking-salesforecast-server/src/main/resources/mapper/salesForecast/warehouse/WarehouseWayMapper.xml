@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.warehouse.mapper.WarehouseWayMapper">
+
+    <resultMap type="WarehouseWay" id="WarehouseWayResult">
+        <result property="wayId" column="way_id"/>
+        <result property="period" column="period"/>
+        <result property="warehouse" column="warehouse"/>
+        <result property="forecastMonth" column="forecast_month"/>
+        <result property="sku" column="sku"/>
+        <result property="wayNum" column="way_num"/>
+    </resultMap>
+
+    <sql id="selectWarehouseWayVo">
+        select way_id, period, warehouse, forecast_month, sku, way_num from mis_warehouse_way
+    </sql>
+
+    <select id="selectWarehouseWayList" parameterType="WarehouseWay" resultMap="WarehouseWayResult">
+        <include refid="selectWarehouseWayVo"/>
+        <where>
+            <if test="period != null ">and period = #{period}</if>
+            <if test="warehouse != null  and warehouse != ''">and warehouse = #{warehouse}</if>
+            <if test="forecastMonth != null ">and forecast_month = #{forecastMonth}</if>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+            <if test="wayNum != null ">and way_num = #{wayNum}</if>
+        </where>
+    </select>
+
+    <select id="selectWarehouseWayById" parameterType="Long" resultMap="WarehouseWayResult">
+        <include refid="selectWarehouseWayVo"/>
+        where way_id = #{wayId}
+    </select>
+
+    <insert id="insertWarehouseWay" parameterType="WarehouseWay" useGeneratedKeys="true" keyProperty="wayId">
+        insert into mis_warehouse_way
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="period != null ">period,</if>
+            <if test="warehouse != null  and warehouse != ''">warehouse,</if>
+            <if test="forecastMonth != null ">forecast_month,</if>
+            <if test="sku != null  and sku != ''">sku,</if>
+            <if test="wayNum != null ">way_num,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="period != null ">#{period},</if>
+            <if test="warehouse != null  and warehouse != ''">#{warehouse},</if>
+            <if test="forecastMonth != null ">#{forecastMonth},</if>
+            <if test="sku != null  and sku != ''">#{sku},</if>
+            <if test="wayNum != null ">#{wayNum},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWarehouseWay" parameterType="WarehouseWay">
+        update mis_warehouse_way
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="period != null ">period = #{period},</if>
+            <if test="warehouse != null  and warehouse != ''">warehouse = #{warehouse},</if>
+            <if test="forecastMonth != null ">forecast_month = #{forecastMonth},</if>
+            <if test="sku != null  and sku != ''">sku = #{sku},</if>
+            <if test="wayNum != null ">way_num = #{wayNum},</if>
+        </trim>
+        where way_id = #{wayId}
+    </update>
+
+    <delete id="deleteWarehouseWayById" parameterType="Long">
+        delete from mis_warehouse_way where way_id = #{wayId}
+    </delete>
+
+    <delete id="deleteWarehouseWayByIds" parameterType="String">
+        delete from mis_warehouse_way where way_id in
+        <foreach item="wayId" collection="array" open="(" separator="," close=")">
+            #{wayId}
+        </foreach>
+    </delete>
+
+</mapper>

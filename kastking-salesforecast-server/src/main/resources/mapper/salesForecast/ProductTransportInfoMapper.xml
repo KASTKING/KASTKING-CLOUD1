@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.productTransportInfo.mapper.ProductTransportInfoMapper">
+
+    <resultMap type="ProductTransportInfo" id="ProductTransportInfoResult">
+        <result property="transportInfoId" column="transport_info_id"/>
+        <result property="sku" column="sku"/>
+        <result property="marketId" column="market_id"/>
+        <result property="transportId" column="transport_id"/>
+        <result property="memo" column="memo"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="transportMonth" column="transport_month"/>
+        <result property="presellsMonth" column="presells_month"/>
+        <result property="produceMonth" column="produce_month"/>
+        <result property="moq" column="moq"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+    <sql id="selectProductTransportInfoVo">
+        select transport_info_id, sku, market_id, transport_id, memo, create_date,
+        update_date,transport_month,presells_month
+        ,produce_month,moq,state from mis_product_transport_info
+    </sql>
+
+    <insert id="generateSalesEstimates" parameterType="java.lang.String">
+        INSERT INTO
+        mis_salesforcast_info(period,channel,salesman,sku,forecast_month,product_level,mom,last_year_sales,monthly_sales,forecast_monthly_sales,last_demand,suggested_amount)
+        select #{period} as period,t.channel,t.salesman,t.sku,t.forecast_month,mis_product_level.product_level,
+        case when t.channel LIKE 'AMZ%' THEN mis_salesforecast_mom.mom ELSE null end as mom,
+        mis_channel_years_sales.sales as
+        last_year_sales,mis_channel_sales.monthly_sales,mis_channel_sales.forecast_monthly_sales,
+        mis_salesforcast_info.demand as last_demand,
+        ROUND(case when t.channel LIKE 'AMZ%' THEN mis_channel_sales.monthly_sales*(1+mis_salesforecast_mom.mom) else
+        null end) as suggested_amount
+        from (
+        select platform,channel,salesman,mis_person_product.sku,presells_month,date_add(#{period}, interval 7 MONTH) as
+        forecast_month
+        from mis_person_product
+        INNER JOIN misv_platform_channel on misv_platform_channel.salesman_id = mis_person_product.platform_channel_id
+        INNER JOIN mis_product_transport_info on misv_platform_channel.market_id=mis_product_transport_info.market_id
+        and mis_person_product.sku=mis_product_transport_info.sku
+        where is_expected=1 and presells_month>=7
+        union all
+        select platform,channel,salesman,mis_person_product.sku,presells_month,date_add(#{period}, interval 6 MONTH) as
+        forecast_month
+        from mis_person_product
+        INNER JOIN misv_platform_channel on misv_platform_channel.salesman_id = mis_person_product.platform_channel_id
+        INNER JOIN mis_product_transport_info on misv_platform_channel.market_id=mis_product_transport_info.market_id
+        and mis_person_product.sku=mis_product_transport_info.sku
+        where is_expected=1 and presells_month>=6
+        union all
+        select platform,channel,salesman,mis_person_product.sku,presells_month,date_add(#{period}, interval 5 MONTH) as
+        forecast_month
+        from mis_person_product
+        INNER JOIN misv_platform_channel on misv_platform_channel.salesman_id = mis_person_product.platform_channel_id
+        INNER JOIN mis_product_transport_info on misv_platform_channel.market_id=mis_product_transport_info.market_id
+        and mis_person_product.sku=mis_product_transport_info.sku
+        where is_expected=1 and presells_month>=5
+        union all
+        select platform,channel,salesman,mis_person_product.sku,presells_month,date_add(#{period}, interval 4 MONTH) as
+        forecast_month
+        from mis_person_product
+        INNER JOIN misv_platform_channel on misv_platform_channel.salesman_id = mis_person_product.platform_channel_id
+        INNER JOIN mis_product_transport_info on misv_platform_channel.market_id=mis_product_transport_info.market_id
+        and mis_person_product.sku=mis_product_transport_info.sku
+        where is_expected=1 and presells_month>=4
+        union all
+        select platform,channel,salesman,mis_person_product.sku,presells_month,date_add(#{period}, interval 3 MONTH) as
+        forecast_month
+        from mis_person_product
+        INNER JOIN misv_platform_channel on misv_platform_channel.salesman_id = mis_person_product.platform_channel_id
+        INNER JOIN mis_product_transport_info on misv_platform_channel.market_id=mis_product_transport_info.market_id
+        and mis_person_product.sku=mis_product_transport_info.sku
+        where is_expected=1 and presells_month>=3
+        union all
+        select platform,channel,salesman,mis_person_product.sku,presells_month,date_add(#{period}, interval 2 MONTH) as
+        forecast_month
+        from mis_person_product
+        INNER JOIN misv_platform_channel on misv_platform_channel.salesman_id = mis_person_product.platform_channel_id
+        INNER JOIN mis_product_transport_info on misv_platform_channel.market_id=mis_product_transport_info.market_id
+        and mis_person_product.sku=mis_product_transport_info.sku
+        where is_expected=1 and presells_month>=2
+        union all
+        select platform,channel,salesman,mis_person_product.sku,presells_month,date_add(#{period}, interval 1 MONTH) as
+        forecast_month
+        from mis_person_product
+        INNER JOIN misv_platform_channel on misv_platform_channel.salesman_id = mis_person_product.platform_channel_id
+        INNER JOIN mis_product_transport_info on misv_platform_channel.market_id=mis_product_transport_info.market_id
+        and mis_person_product.sku=mis_product_transport_info.sku
+        where is_expected=1 and presells_month>=1
+        ) t
+        LEFT JOIN mis_product_level on t.channel=mis_product_level.channel and t.sku=mis_product_level.sku
+        LEFT JOIN mis_salesforecast_mom on t.forecast_month=mis_salesforecast_mom.years
+        LEFT JOIN mis_channel_years_sales on t.forecast_month=date_add(mis_channel_years_sales.years, interval 1 YEAR)
+        and t.channel=mis_channel_years_sales.channel and t.sku=mis_channel_years_sales.sku
+        LEFT JOIN mis_channel_sales on t.channel=mis_channel_sales.channel and t.sku=mis_channel_sales.sku
+        LEFT JOIN (select * from mis_salesforcast_info where period=(select MAX(period) from mis_salesforcast_info ))
+        mis_salesforcast_info on mis_salesforcast_info.channel=t.channel and
+        mis_salesforcast_info.forecast_month=t.forecast_month and mis_salesforcast_info.sku=t.sku
+    </insert>
+
+    <select id="selectProductTransportInfoList" parameterType="ProductTransportInfo"
+            resultMap="ProductTransportInfoResult">
+        <include refid="selectProductTransportInfoVo"/>
+        <where>
+            <if test="sku != null  and sku != ''">and sku = #{sku}</if>
+            <if test="marketId != null ">and market_id = #{marketId}</if>
+            <if test="transportId != null ">and transport_id = #{transportId}</if>
+            <if test="memo != null  and memo != ''">and memo = #{memo}</if>
+        </where>
+    </select>
+
+    <select id="selectProductTransportInfoById" parameterType="Long" resultMap="ProductTransportInfoResult">
+        <include refid="selectProductTransportInfoVo"/>
+        where transport_info_id = #{transportInfoId}
+    </select>
+
+    <insert id="insertProductTransportInfo" parameterType="ProductTransportInfo" useGeneratedKeys="true"
+            keyProperty="transportInfoId">
+        insert into mis_product_transport_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sku != null  and sku != ''">sku,</if>
+            <if test="marketId != null and marketId != ''">market_id,</if>
+            <if test="transportId != null and transportId != ''">transport_id,</if>
+            <if test="memo != null  and memo != ''">memo,</if>
+            <if test="createDate != null ">create_date,</if>
+            <if test="updateDate != null ">update_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sku != null  and sku != ''">#{sku},</if>
+            <if test="marketId != null ">#{marketId},</if>
+            <if test="transportId != null ">#{transportId},</if>
+            <if test="memo != null  and memo != ''">#{memo},</if>
+            <if test="createDate != null ">#{createDate},</if>
+            <if test="updateDate != null ">#{updateDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductTransportInfo" parameterType="ProductTransportInfo">
+        update mis_product_transport_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sku != null  and sku != ''">sku = #{sku},</if>
+            <if test="marketId != null ">market_id = #{marketId},</if>
+            <if test="transportId != null ">transport_id = #{transportId},</if>
+            <if test="memo != null  and memo != ''">memo = #{memo},</if>
+            <if test="createDate != null ">create_date = #{createDate},</if>
+            <if test="updateDate != null ">update_date = #{updateDate},</if>
+        </trim>
+        where transport_info_id = #{transportInfoId}
+    </update>
+
+    <delete id="deleteProductTransportInfoById" parameterType="Long">
+        delete from mis_product_transport_info where transport_info_id = #{transportInfoId}
+    </delete>
+
+    <delete id="deleteProductTransportInfoByIds" parameterType="String">
+        delete from mis_product_transport_info where transport_info_id in
+        <foreach item="transportInfoId" collection="array" open="(" separator="," close=")">
+            #{transportInfoId}
+        </foreach>
+    </delete>
+
+</mapper>

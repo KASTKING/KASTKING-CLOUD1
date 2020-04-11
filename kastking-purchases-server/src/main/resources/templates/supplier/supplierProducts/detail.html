@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('供应商产品详情')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-misSupplierProduct-edit">
+        <div class="form-group" style="display: none">
+            <label class="col-sm-3 control-label">productId：</label>
+            <div id="productId" class="form-control-static" th:text="${misSupplierProduct.productId}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">SKU：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.sku}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">币种：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.currency}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">税点(%)：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.taxPoint}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">单价(不含税)：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.noUnitPrice}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">单价(含税)：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.unitPrice}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">生产周期(天)：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.productionCycle}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">最小下单数：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.minimumOrder}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">装箱数：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.qty}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.status}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">是否最新：</label>
+            <div class="form-control-static"
+                 th:if="${misSupplierProduct.upToDate} eq 'Y'" th:text="是">
+            </div>
+            <div class="form-control-static"
+                 th:if="${misSupplierProduct.upToDate} eq 'N'" th:text="否">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">是否阶梯价：</label>
+            <div class="form-control-static"
+                 th:if="${misSupplierProduct.stepPrice} eq 'Y'" th:text="是">
+            </div>
+            <div class="form-control-static"
+                 th:if="${misSupplierProduct.stepPrice} eq 'N'" th:text="否">
+            </div>
+        </div>
+        <div id="divs">
+            <div class="form-group">
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">标识：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.logo}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="form-control-static" th:text="${misSupplierProduct.remark}"></div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+</body>
+<script type="text/javascript">
+    var prefix = ctx + "supplier/productLadder";
+    $(function () {
+        //查询是否有阶梯价
+        $.ajax({
+            type: "post",
+            url: prefix + "/list?productId=" + $("#productId").text(),
+            dataType: "json",
+            success: function (result) {
+                var str = "";
+                console.log(result)
+                for (i = 0; i < result.rows.length; i++) {
+                    str += "<label class='col-sm-3 control-label'>阶梯价" + (i + 1) + "：</label>";
+                    str += "<label class='col-sm-3 control-label'>价格1：" + result.rows[i].priceOne + "</label>";
+                    str += "<label class='col-sm-3 control-label'>价格2：" + result.rows[i].priceTwo + "</label>";
+                    str += "<label class='col-sm-3 control-label'>单价：" + result.rows[i].unitPrice + "</label>";
+                }
+                $("#divs div").append(str);
+            }
+        });
+    })
+</script>
+</html>
+

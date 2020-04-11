@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增人员产品')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-personProduct-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">业务员：</label>
+            <div class="col-sm-8">
+                <input type="hidden" id="platformChannelId" name="platformChannelId">
+                <input id="salesman" class="form-control" type="text" readonly="readonly" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">SKU：</label>
+            <div class="col-sm-8">
+                <input name="sku" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">售价：</label>
+            <div class="col-sm-8">
+                <input name="sellingPrice" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">是否预计：</label>
+            <div class="col-sm-8">
+                <div class="radio-box" th:each="dict : ${@dict.getType('mis_yes_no')}">
+                    <input type="radio" th:id="${dict.dictCode}" name="isExpected" th:value="${dict.dictValue}"
+                           th:checked="${dict.default}">
+                    <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Memo：</label>
+            <div class="col-sm-8">
+                <input name="memo" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<script type="text/javascript">
+    $("#salesman").val(parent.salesman);
+    $("#platformChannelId").val(parent.fuId);
+    var prefix = ctx + "salesForecast/personProduct"
+    $("#form-personProduct-add").validate({
+        focusCleanup: true,
+        rules: {
+            sellingPrice: {
+                number: true
+            },
+        },
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-personProduct-add').serialize());
+        }
+    }
+
+    $("input[name='createDate']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+
+    $("input[name='updateDate']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+</script>
+</body>
+</html>

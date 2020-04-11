@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增产品信息')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-productInfo-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">Product Category：</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <input id="treeId" name="fatherId" type="hidden" th:value="${productCategory?.categoryId}"/>
+                    <input class="form-control" type="text" onclick="selectProductCategoryTree()" id="treeName"
+                           readonly="true" th:value="${productCategory?.category}" required>
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">SKU：</label>
+            <div class="col-sm-8">
+                <input name="sku" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Number：</label>
+            <div class="col-sm-8">
+                <input name="number" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Memo：</label>
+            <div class="col-sm-8">
+                <input name="memo" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">State：</label>
+            <div class="col-sm-8">
+                <input name="state" class="form-control" type="text" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Designer：</label>
+            <div class="col-sm-8">
+                <input name="designer" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Changes：</label>
+            <div class="col-sm-8">
+                <input name="changes" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">NameRule：</label>
+            <div class="col-sm-8">
+                <textarea name="nameRule" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Country：</label>
+            <div class="col-sm-8">
+                <input name="country" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">DiameterMM：</label>
+            <div class="col-sm-8">
+                <input name="diameterMm" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">DiameterInch：</label>
+            <div class="col-sm-8">
+                <input name="diameterInch" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ReelSize：</label>
+            <div class="col-sm-8">
+                <input name="reelSize" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ReelWeight：</label>
+            <div class="col-sm-8">
+                <input name="reelWeight" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">MaxDrag：</label>
+            <div class="col-sm-8">
+                <input name="maxDrag" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">GearRatio：</label>
+            <div class="col-sm-8">
+                <input name="gearRatio" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">BallBearing：</label>
+            <div class="col-sm-8">
+                <input name="ballBearing" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">IPT：</label>
+            <div class="col-sm-8">
+                <input name="ipt" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">CPT：</label>
+            <div class="col-sm-8">
+                <input name="cpt" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineCapacityLB：</label>
+            <div class="col-sm-8">
+                <input name="lineCapacityLb" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineCapacityMM：</label>
+            <div class="col-sm-8">
+                <input name="lineCapacityMm" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">RodType：</label>
+            <div class="col-sm-8">
+                <input name="rodType" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">RodWeight：</label>
+            <div class="col-sm-8">
+                <input name="rodWeight" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">RodLength：</label>
+            <div class="col-sm-8">
+                <input name="rodLength" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Action：</label>
+            <div class="col-sm-8">
+                <input name="action" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Power：</label>
+            <div class="col-sm-8">
+                <input name="power" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineWt：</label>
+            <div class="col-sm-8">
+                <input name="lineWt" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LureWt：</label>
+            <div class="col-sm-8">
+                <input name="lureWt" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">NOofGuides：</label>
+            <div class="col-sm-8">
+                <input name="noOfGuides" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Pieces：</label>
+            <div class="col-sm-8">
+                <input name="pieces" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ToolLength：</label>
+            <div class="col-sm-8">
+                <input name="toolLength" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Material：</label>
+            <div class="col-sm-8">
+                <input name="material" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Color：</label>
+            <div class="col-sm-8">
+                <input name="color" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Style：</label>
+            <div class="col-sm-8">
+                <input name="style" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Type：</label>
+            <div class="col-sm-8">
+                <input name="type" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Size：</label>
+            <div class="col-sm-8">
+                <input name="size" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Notes：</label>
+            <div class="col-sm-8">
+                <input name="notes" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note1：</label>
+            <div class="col-sm-8">
+                <input name="note1" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note2：</label>
+            <div class="col-sm-8">
+                <input name="note2" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note3：</label>
+            <div class="col-sm-8">
+                <input name="note3" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note4：</label>
+            <div class="col-sm-8">
+                <input name="note4" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note5：</label>
+            <div class="col-sm-8">
+                <input name="note5" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Note6：</label>
+            <div class="col-sm-8">
+                <input name="note6" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LenzColor：</label>
+            <div class="col-sm-8">
+                <input name="lenzColor" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">CoatingColor：</label>
+            <div class="col-sm-8">
+                <input name="coatingColor" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LenzMaterial：</label>
+            <div class="col-sm-8">
+                <input name="lenzMaterial" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">FrameColor：</label>
+            <div class="col-sm-8">
+                <input name="frameColor" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">FrameMateiral：</label>
+            <div class="col-sm-8">
+                <input name="frameMateiral" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Picture：</label>
+            <div class="col-sm-8">
+                <input name="picture" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineWeight：</label>
+            <div class="col-sm-8">
+                <input name="lineWeight" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineLength：</label>
+            <div class="col-sm-8">
+                <input name="lineLength" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">TestLB：</label>
+            <div class="col-sm-8">
+                <input name="testLb" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">LineType：</label>
+            <div class="col-sm-8">
+                <input name="lineType" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Strands：</label>
+            <div class="col-sm-8">
+                <input name="strands" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">TestStrength：</label>
+            <div class="col-sm-8">
+                <input name="testStrength" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">TTSKU：</label>
+            <div class="col-sm-8">
+                <input name="ttsku" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Tag：</label>
+            <div class="col-sm-8">
+                <input name="tag" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<script type="text/javascript">
+    var prefix = ctx + "product/productInfo"
+    $("#form-productInfo-add").validate({
+        focusCleanup: true
+    });
+
+    /*产品类目-新增-选择父部门树*/
+    function selectProductCategoryTree() {
+        var options = {
+            title: '产品类目选择',
+            width: "380",
+            url: ctx + "product/productCategory" + "/selectProductCategoryTree/" + $("#treeId").val(),
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmit(index, layero) {
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+    }
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-productInfo-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>

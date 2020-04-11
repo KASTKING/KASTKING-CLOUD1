@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('供应商凭证详情')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-misSupplierFile-edit">
+        <!--                                <div class="form-group">-->
+        <!--                <label class="col-sm-3 control-label">主键ID：</label>-->
+        <!--                <div class="form-control-static" th:text="${misSupplierFile.certificateId}"></div>-->
+        <!--            </div>-->
+        <!--                                            <div class="form-group">-->
+        <!--                <label class="col-sm-3 control-label">父ID：</label>-->
+        <!--                <div class="form-control-static" th:text="${misSupplierFile.fatherId}"></div>-->
+        <!--            </div>-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">所属类型：</label>
+            <div class="form-control-static" th:text="${misSupplierFile.type}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">父级名称：</label>
+            <div class="form-control-static" th:text="${misSupplierFile.fatherName}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">文件名称：</label>
+            <div class="form-control-static" th:text="${misSupplierFile.caption}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">文件类型：</label>
+            <div class="form-control-static" th:text="${misSupplierFile.types}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">文件大小：</label>
+            <div class="form-control-static" th:text="${misSupplierFile.size}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">凭证&amp;附件路径：</label>
+            <div class="form-control-static" th:text="${misSupplierFile.annex}"></div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+</body>
+</html>

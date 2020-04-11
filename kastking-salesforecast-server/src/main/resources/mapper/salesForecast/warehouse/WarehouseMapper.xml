@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kastking.warehouse.mapper.WarehouseMapper">
+
+    <resultMap type="Warehouse" id="WarehouseResult">
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="warehouse" column="warehouse"/>
+        <result property="channel" column="channel"/>
+        <result property="marketId" column="market_id"/>
+    </resultMap>
+
+    <sql id="selectWarehouseVo">
+        select warehouse_id, warehouse, channel, market_id from mis_warehouse
+    </sql>
+
+    <select id="selectWarehouseList" parameterType="Warehouse" resultMap="WarehouseResult">
+        <include refid="selectWarehouseVo"/>
+        <where>
+            <if test="warehouse != null  and warehouse != ''">and warehouse = #{warehouse}</if>
+            <if test="channel != null  and channel != ''">and channel = #{channel}</if>
+            <if test="marketId != null and marketId != ''">and market_id = #{marketId}</if>
+        </where>
+    </select>
+
+    <select id="selectWarehouseById" parameterType="Long" resultMap="WarehouseResult">
+        <include refid="selectWarehouseVo"/>
+        where warehouse_id = #{warehouseId}
+    </select>
+
+    <insert id="insertWarehouse" parameterType="Warehouse" useGeneratedKeys="true" keyProperty="warehouseId">
+        insert into mis_warehouse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="warehouse != null  and warehouse != ''">warehouse,</if>
+            <if test="channel != null  and channel != ''">channel,</if>
+            <if test="marketId != null and marketId != ''">market_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="warehouse != null  and warehouse != ''">#{warehouse},</if>
+            <if test="channel != null  and channel != ''">#{channel},</if>
+            <if test="marketId != null and marketId != ''">#{marketId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWarehouse" parameterType="Warehouse">
+        update mis_warehouse
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="warehouse != null  and warehouse != ''">warehouse = #{warehouse},</if>
+            <if test="channel != null  and channel != ''">channel = #{channel},</if>
+            <if test="marketId != null and marketId != ''">market_id = #{marketId},</if>
+        </trim>
+        where warehouse_id = #{warehouseId}
+    </update>
+
+    <delete id="deleteWarehouseById" parameterType="Long">
+        delete from mis_warehouse where warehouse_id = #{warehouseId}
+    </delete>
+
+    <delete id="deleteWarehouseByIds" parameterType="String">
+        delete from mis_warehouse where warehouse_id in
+        <foreach item="warehouseId" collection="array" open="(" separator="," close=")">
+            #{warehouseId}
+        </foreach>
+    </delete>
+
+</mapper>
