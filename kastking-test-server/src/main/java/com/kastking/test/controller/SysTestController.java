@@ -35,7 +35,7 @@ public class SysTestController extends BaseController {
 
     @RequestMapping(value = "/aa",method = RequestMethod.GET)
     String test(@RequestParam("str") String str, @RequestParam("name") String name){
-        return "*************"+str+"***************"+name+"****";
+        return "**********wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww***"+str+"***************"+name+"****";
     }
 
     /**
